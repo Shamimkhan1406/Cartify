@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  //const LoginScreen({super.key});
+  final GlobalKey <FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -12,157 +13,187 @@ class LoginScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'log in your account',
-                style: GoogleFonts.getFont(
-                  'Lato',
-                  color: Colors.black87,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.2,
-                  fontSize: 23,
-                ),
-              ),
-              Text(
-                'to explore the world exclusives',
-                style: GoogleFonts.getFont(
-                  'Lato',
-                  color: Colors.black87,
-                  fontSize: 14,
-                ),
-              ),
-              Image.asset(
-                'assets/images/Illustration.png',
-                width: 200,
-                height: 200,
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Email',
-                  style: GoogleFonts.getFont(
-                    'Nunito Sans',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(9),
-                  ),
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  labelText: 'Enter your email',
-                  labelStyle: GoogleFonts.getFont(
-                    'Nunito Sans',
-                    fontSize: 14,
-                    letterSpacing: 0.1,
-                  ),
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset(
-                      'assets/icons/email.png',
-                      width: 20,
-                      height: 20,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Password',
-                  style: GoogleFonts.getFont(
-                    'Nunito Sans',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(9),
-                  ),
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  labelText: 'Enter your password',
-                  labelStyle: GoogleFonts.getFont(
-                    'Nunito Sans',
-                    fontSize: 14,
-                    letterSpacing: 0.1,
-                  ),
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset(
-                      'assets/icons/password.png',
-                      width: 20,
-                      height: 20,
-                    ),
-                  ),
-                  suffixIcon: Icon(Icons.visibility),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                width: 319,
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(9),
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFF102DE1),
-                      Color(0xCC0D6EFF),
-                    ],
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    'Sign In',
-                    style: GoogleFonts.getFont(
-                      'Lato',
-                      fontSize: 17,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("don't have an account? ",style: GoogleFonts.roboto(
-                    fontSize: 15,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                  ),),
+                  Text(
+                    'log in your account',
+                    style: GoogleFonts.getFont(
+                      'Lato',
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.2,
+                      fontSize: 23,
+                    ),
+                  ),
+                  Text(
+                    'to explore the world exclusives',
+                    style: GoogleFonts.getFont(
+                      'Lato',
+                      color: Colors.black87,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Image.asset(
+                    'assets/images/Illustration.png',
+                    width: 200,
+                    height: 200,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Email',
+                      style: GoogleFonts.getFont(
+                        'Nunito Sans',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty || !value.contains('@') || !value.contains('.com')) {
+                        return 'Please enter a valid email';
+                      }else{
+                        return null;
+                      }
+                    },
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(9),
+                      ),
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      labelText: 'Enter your email',
+                      labelStyle: GoogleFonts.getFont(
+                        'Nunito Sans',
+                        fontSize: 14,
+                        letterSpacing: 0.1,
+                      ),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          'assets/icons/email.png',
+                          width: 20,
+                          height: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Password',
+                      style: GoogleFonts.getFont(
+                        'Nunito Sans',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                      else{
+                        return null;
+                      }
+                    },
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(9),
+                      ),
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      labelText: 'Enter your password',
+                      labelStyle: GoogleFonts.getFont(
+                        'Nunito Sans',
+                        fontSize: 14,
+                        letterSpacing: 0.1,
+                      ),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          'assets/icons/password.png',
+                          width: 20,
+                          height: 20,
+                        ),
+                      ),
+                      suffixIcon: Icon(Icons.visibility),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen(),));
+                      if(_formKey.currentState!.validate()){
+                        print('valid');
+                      }
+                      else{
+                        print('invalid');
+                      }
                     },
-                    child: Text("Sign Up !",style: GoogleFonts.roboto(
-                      fontSize: 15,
-                      color: Colors.deepPurple,
-                      fontWeight: FontWeight.bold,
-                    ),),
+                    child: Container(
+                      width: 319,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(9),
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color(0xFF102DE1),
+                            Color(0xCC0D6EFF),
+                          ],
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Sign In',
+                          style: GoogleFonts.getFont(
+                            'Lato',
+                            fontSize: 17,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("don't have an account? ",style: GoogleFonts.roboto(
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),),
+                      InkWell(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen(),));
+                        },
+                        child: Text("Sign Up !",style: GoogleFonts.roboto(
+                          fontSize: 15,
+                          color: Colors.deepPurple,
+                          fontWeight: FontWeight.bold,
+                        ),),
+                      ),
+                    ],
+                  )
                 ],
-              )
-            ],
+              ),
+            ),
           ),
         ),
       ),
