@@ -152,7 +152,7 @@ class LoginScreen extends StatelessWidget {
                   ),),
                   InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterScreen(),));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen(),));
                     },
                     child: Text("Sign Up !",style: GoogleFonts.roboto(
                       fontSize: 15,
