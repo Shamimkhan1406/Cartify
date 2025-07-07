@@ -55,7 +55,7 @@ class RegisterScreen extends StatelessWidget {
                   ),
                   TextFormField(
                     validator: (value) {
-                      if (value == null || value.isEmpty || !value.contains('@') || !value.contains('.')) {
+                      if (value == null || value.isEmpty) {
                         return 'Please enter your email';
                       }
                       return null;
@@ -142,7 +142,7 @@ class RegisterScreen extends StatelessWidget {
                   ),
                   TextFormField(
                     validator: (value) {
-                      if (value == null || value.isEmpty || value.length < 8) {
+                      if (value == null || value.isEmpty) {
                         return 'Please enter your password';
                       }
                       return null;

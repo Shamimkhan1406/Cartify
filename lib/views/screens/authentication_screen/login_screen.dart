@@ -54,7 +54,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   TextFormField(
                     validator: (value) {
-                      if (value == null || value.isEmpty || !value.contains('@') || !value.contains('.com')) {
+                      if (value == null || value.isEmpty) {
                         return 'Please enter a valid email';
                       }else{
                         return null;
