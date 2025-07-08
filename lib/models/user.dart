@@ -1,5 +1,7 @@
 
-class user {
+import 'dart:convert';
+
+class User {
   final String id;
   final String fullName;
   final String email;
@@ -8,7 +10,7 @@ class user {
   final String locality;
   final String password;
 
-  user({required this.id, required this.fullName, required this.email, required this.state, required this.city, required this.locality, required this.password});
+  User({required this.id, required this.fullName, required this.email, required this.state, required this.city, required this.locality, required this.password});
   // serialization: convert user object to a map
   Map<String, dynamic>toMap(){
     return <String, dynamic>{
@@ -21,4 +23,6 @@ class user {
       "password": password,
     };
   }
+  // convert map to json string
+  String toJson()=> json.encode(toMap());
 }
