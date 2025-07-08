@@ -46,5 +46,5 @@ app.*.map.json
 
 # global variables
 /.env
-/global_variables.dart
+global_variables.dart
 
