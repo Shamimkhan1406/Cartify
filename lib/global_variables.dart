@@ -1,1 +1,3 @@
-String uri = "http://7.0.0.1:3000";
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+String uri = dotenv.get('ip');
