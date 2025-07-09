@@ -9,6 +9,7 @@ class User {
   final String city;
   final String locality;
   final String password;
+  final String token;
 
   User({
     required this.id,
@@ -18,6 +19,7 @@ class User {
     required this.city,
     required this.locality,
     required this.password,
+    required this.token,
   });
   // serialization: convert user object to a map
   Map<String, dynamic> toMap() {
@@ -29,6 +31,7 @@ class User {
       "city": city,
       "locality": locality,
       "password": password,
+      "token": token,
     };
   }
 
@@ -48,6 +51,7 @@ class User {
       city: map["city"] as String? ?? "",
       locality: map["locality"] as String? ?? "",
       password: map["password"] as String? ?? "",
+      token: map["token"] as String? ?? "",
     );
   }
   // fromJson: this factory constructor takes a json string and decode into a Map<String, dynamic> object
