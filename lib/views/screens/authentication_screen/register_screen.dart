@@ -3,13 +3,40 @@ import 'package:cartify/views/screens/authentication_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   //const RegisterScreen({super.key});
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   final AuthController _authController = AuthController();
+
   late String fullName;
+
   late String email;
+
   late String password;
+
+  bool isLoading = false;
+
+  void registerUser() async{
+    setState(() {
+      isLoading = true;
+    });
+    await _authController.signUpUser(
+      context: context,
+      fullName: fullName,
+      email: email,
+      password: password,
+    ).whenComplete((){
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -185,15 +212,10 @@ class RegisterScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   InkWell(
-                    onTap: () async {
+                    onTap: () {
                       if (_formKey.currentState!.validate()) {
                         // Form is valid, navigate to the next screen
-                        await _authController.signUpUser(
-                          context: context,
-                          fullName: fullName,
-                          email: email,
-                          password: password,
-                        );
+                        registerUser();
                       } else {
                         print('Form is not valid');
                       }
@@ -208,7 +230,7 @@ class RegisterScreen extends StatelessWidget {
                         ),
                       ),
                       child: Center(
-                        child: Text(
+                        child: isLoading ? const CircularProgressIndicator(color: Colors.white,) : Text(
                           'Sign Up',
                           style: GoogleFonts.getFont(
                             'Lato',

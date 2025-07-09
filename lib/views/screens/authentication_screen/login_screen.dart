@@ -15,6 +15,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
   late String password;
 
+  bool isLoading = false;
+  loginUser() async {
+    setState(() {
+      isLoading = true;
+    });
+    await _authController
+        .signInUser(context: context, email: email, password: password)
+        .whenComplete(() {
+          setState(() {
+            isLoading = false;
+          });
+        });
+  }
+
   //const LoginScreen({super.key});
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -150,11 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   InkWell(
                     onTap: () async {
                       if (_formKey.currentState!.validate()) {
-                        await _authController.signInUser(
-                          context: context,
-                          email: email,
-                          password: password,
-                        );
+                        loginUser();
                       } else {
                         print('invalid');
                       }
@@ -169,15 +179,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       child: Center(
-                        child: Text(
-                          'Sign In',
-                          style: GoogleFonts.getFont(
-                            'Lato',
-                            fontSize: 17,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        child:
+                            isLoading
+                                ? const CircularProgressIndicator(color: Colors.white,)
+                                : Text(
+                                  'Sign In',
+                                  style: GoogleFonts.getFont(
+                                    'Lato',
+                                    fontSize: 17,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                       ),
                     ),
                   ),
