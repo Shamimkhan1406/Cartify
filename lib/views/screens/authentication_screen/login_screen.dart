@@ -1,15 +1,27 @@
+import 'package:cartify/controllers/auth_controller.dart';
 import 'package:cartify/views/screens/authentication_screen/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final AuthController _authController = AuthController();
+
+  late String email;
+
+  late String password;
+
   //const LoginScreen({super.key});
-  final GlobalKey <FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(230, 255, 255, 255,),
+      backgroundColor: const Color.fromARGB(230, 255, 255, 255),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
@@ -53,10 +65,13 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   TextFormField(
+                    onChanged: (value) {
+                      email = value;
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a valid email';
-                      }else{
+                      } else {
                         return null;
                       }
                     },
@@ -84,9 +99,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   Align(
                     alignment: Alignment.topLeft,
                     child: Text(
@@ -98,11 +111,13 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   TextFormField(
+                    onChanged: (value) {
+                      password = value;
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
-                      }
-                      else{
+                      } else {
                         return null;
                       }
                     },
@@ -131,15 +146,16 @@ class LoginScreen extends StatelessWidget {
                       suffixIcon: Icon(Icons.visibility),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   InkWell(
-                    onTap: (){
-                      if(_formKey.currentState!.validate()){
-                        print('valid');
-                      }
-                      else{
+                    onTap: () async {
+                      if (_formKey.currentState!.validate()) {
+                        await _authController.signInUser(
+                          context: context,
+                          email: email,
+                          password: password,
+                        );
+                      } else {
                         print('invalid');
                       }
                     },
@@ -149,10 +165,7 @@ class LoginScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(9),
                         gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFF102DE1),
-                            Color(0xCC0D6EFF),
-                          ],
+                          colors: [Color(0xFF102DE1), Color(0xCC0D6EFF)],
                         ),
                       ),
                       child: Center(
@@ -168,29 +181,38 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("don't have an account? ",style: GoogleFonts.roboto(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                      ),),
-                      InkWell(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen(),));
-                        },
-                        child: Text("Sign Up !",style: GoogleFonts.roboto(
+                      Text(
+                        "don't have an account? ",
+                        style: GoogleFonts.roboto(
                           fontSize: 15,
-                          color: Colors.deepPurple,
-                          fontWeight: FontWeight.bold,
-                        ),),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RegisterScreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Sign Up !",
+                          style: GoogleFonts.roboto(
+                            fontSize: 15,
+                            color: Colors.deepPurple,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

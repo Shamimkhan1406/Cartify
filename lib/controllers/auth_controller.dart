@@ -6,6 +6,7 @@ import 'dart:convert';
 
 
 class AuthController {
+  // sign up user
   Future<void> signUpUser({
     required context,
     required String fullName,
@@ -37,4 +38,33 @@ class AuthController {
       showSnackBar(context, "Signup failed: ${e.toString()}");
     }
   }
+  // sign in user
+  Future<void> signInUser({
+    required context,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      http.Response response = await http.post(Uri.parse("$uri/api/signin"),
+          body: jsonEncode({
+            "email": email,
+            "password": password
+          },),
+          headers: <String, String>{
+            // set the headers for the request
+            'Content-Type': 'application/json; charset=UTF-8', // specify the content type to json
+          }
+      );
+      // handle the response by calling the manageHttpResponse function
+      manageHttpResponse(response: response, context: context, onSuccess: (){
+        // show a snackbar with the message
+        showSnackBar(context, "logged in successfully");
+      });
+    } catch (e){
+      print('Error during signin: $e');
+      showSnackBar(context, "Signin failed: ${e.toString()}");
+    }
+  }
+
 }
+
