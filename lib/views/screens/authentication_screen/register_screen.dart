@@ -1,20 +1,24 @@
+import 'package:cartify/controllers/auth_controller.dart';
 import 'package:cartify/views/screens/authentication_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RegisterScreen extends StatelessWidget {
   //const RegisterScreen({super.key});
-  final GlobalKey <FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final AuthController _authController = AuthController();
+  late String fullName;
+  late String email;
+  late String password;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(230, 255, 255, 255,),
+      backgroundColor: const Color.fromARGB(230, 255, 255, 255),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
           child: SingleChildScrollView(
-
             child: Form(
               key: _formKey,
               child: Column(
@@ -54,6 +58,9 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                   TextFormField(
+                    onChanged: (value) {
+                      email = value;
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
@@ -84,7 +91,7 @@ class RegisterScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(height: 20),
                   Align(
                     alignment: Alignment.topLeft,
                     child: Text(
@@ -96,6 +103,9 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                   TextFormField(
+                    onChanged: (value) {
+                      fullName = value;
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your Full Name';
@@ -127,9 +137,7 @@ class RegisterScreen extends StatelessWidget {
                       //suffixIcon: Icon(Icons.visibility),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   Align(
                     alignment: Alignment.topLeft,
                     child: Text(
@@ -141,6 +149,9 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                   TextFormField(
+                    onChanged: (value) {
+                      password = value;
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
@@ -172,16 +183,18 @@ class RegisterScreen extends StatelessWidget {
                       suffixIcon: Icon(Icons.visibility),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   InkWell(
-                    onTap: () {
+                    onTap: () async {
                       if (_formKey.currentState!.validate()) {
                         // Form is valid, navigate to the next screen
-                        print('Form is valid');
-                      }
-                      else{
+                        await _authController.signUpUser(
+                          context: context,
+                          fullName: fullName,
+                          email: email,
+                          password: password,
+                        );
+                      } else {
                         print('Form is not valid');
                       }
                     },
@@ -191,10 +204,7 @@ class RegisterScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(9),
                         gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFF102DE1),
-                            Color(0xCC0D6EFF),
-                          ],
+                          colors: [Color(0xFF102DE1), Color(0xCC0D6EFF)],
                         ),
                       ),
                       child: Center(
@@ -210,29 +220,38 @@ class RegisterScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("already have an account? ",style: GoogleFonts.roboto(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                      ),),
-                      InkWell(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
-                        },
-                        child: Text("Sign In !",style: GoogleFonts.roboto(
+                      Text(
+                        "already have an account? ",
+                        style: GoogleFonts.roboto(
                           fontSize: 15,
-                          color: Colors.deepPurple,
-                          fontWeight: FontWeight.bold,
-                        ),),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginScreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Sign In !",
+                          style: GoogleFonts.roboto(
+                            fontSize: 15,
+                            color: Colors.deepPurple,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

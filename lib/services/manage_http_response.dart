@@ -22,6 +22,9 @@ void manageHttpResponse({
     case 201: // status code 201 means a resource was created successfully
       onSuccess(); // call the onSuccess function
       break;
+    default:
+      showSnackBar(context, "Unexpected error: ${response.statusCode}");
+
   }
 }
 void showSnackBar(BuildContext context, String message){

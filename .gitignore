@@ -45,5 +45,6 @@ app.*.map.json
 /android/app/release
 
 # global variables
+lib/global_variables.dart
 .env
 

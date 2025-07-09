@@ -2,6 +2,8 @@ import 'package:cartify/global_variables.dart';
 import 'package:cartify/models/user.dart';
 import 'package:cartify/services/manage_http_response.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 class AuthController {
   Future<void> signUpUser({
@@ -31,7 +33,8 @@ class AuthController {
         showSnackBar(context, "account created successfully");
       });
     } catch (e) {
-      //
+      print('Error during signup: $e');
+      showSnackBar(context, "Signup failed: ${e.toString()}");
     }
   }
 }
