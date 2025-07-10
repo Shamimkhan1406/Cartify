@@ -1,6 +1,9 @@
 import 'package:cartify/global_variables.dart';
 import 'package:cartify/models/user.dart';
 import 'package:cartify/services/manage_http_response.dart';
+import 'package:cartify/views/screens/authentication_screen/login_screen.dart';
+import 'package:cartify/views/screens/main_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -32,7 +35,10 @@ class AuthController {
           }
       ); // convert the user object to json and send it to the server
       manageHttpResponse(response: response, context: context, onSuccess: (){
+        // show a snackbar with the message
         showSnackBar(context, "account created successfully");
+        // navigate to the main screen
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> LoginScreen()));
       });
     } catch (e) {
       print('Error during signup: $e');
@@ -60,6 +66,8 @@ class AuthController {
       manageHttpResponse(response: response, context: context, onSuccess: (){
         // show a snackbar with the message
         showSnackBar(context, "logged in successfully");
+        // navigate to the main screen
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> MainScreen()), (route)=> false);
       });
     } catch (e){
       print('Error during signin: $e');
