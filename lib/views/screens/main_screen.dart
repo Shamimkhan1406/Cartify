@@ -1,3 +1,8 @@
+import 'package:cartify/views/screens/nav_screens/cart_screen.dart';
+import 'package:cartify/views/screens/nav_screens/favorites_screen.dart';
+import 'package:cartify/views/screens/nav_screens/home_screen.dart';
+import 'package:cartify/views/screens/nav_screens/profile_screen.dart';
+import 'package:cartify/views/screens/nav_screens/stores_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -8,6 +13,13 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   //const MainScreen({super.key});
   int _pageIndex = 0;
+  final List<Widget> _pages = [
+    HomeScreen(),
+    FavoritesScreen(),
+    StoresScreen(),
+    CartScreen(),
+    ProfileScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +57,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ],
       ),
+      body: _pages[_pageIndex],
     );
   }
 }
