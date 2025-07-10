@@ -11,8 +11,30 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text('Wellcome'),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Image.asset("assets/icons/home.png",width: 25,),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset("assets/icons/love.png",width: 25,),
+            label: "Favorites",
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset("assets/icons/mart.png",width: 25,),
+            label: "Store",
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset("assets/icons/cart.png",width: 25,),
+            label: "Cart",
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset("assets/icons/user.png",width: 25,),
+            label: "Account",
+          ),
+        ],
       ),
     );
   }

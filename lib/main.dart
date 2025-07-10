@@ -1,4 +1,5 @@
 import 'package:cartify/views/screens/authentication_screen/login_screen.dart';
+import 'package:cartify/views/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: LoginScreen(),
+      home: MainScreen(),
     );
   }
 }
