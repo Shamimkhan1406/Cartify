@@ -1,4 +1,4 @@
-import 'package:cartify/views/screens/authentication_screen/login_screen.dart';
+//import 'package:cartify/views/screens/authentication_screen/login_screen.dart';
 import 'package:cartify/views/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
