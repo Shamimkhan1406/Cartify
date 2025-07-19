@@ -6,7 +6,7 @@ class HeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.2,
+      height: MediaQuery.of(context).size.height * 0.15,
       width: MediaQuery.of(context).size.width,
       child: Stack(
         children: [
