@@ -1,4 +1,5 @@
 import 'package:cartify/views/screens/nav_screens/cart_screen.dart';
+import 'package:cartify/views/screens/nav_screens/category_screen.dart';
 import 'package:cartify/views/screens/nav_screens/favorites_screen.dart';
 import 'package:cartify/views/screens/nav_screens/home_screen.dart';
 import 'package:cartify/views/screens/nav_screens/profile_screen.dart';
@@ -16,6 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     HomeScreen(),
     FavoritesScreen(),
+    CategoryScreen(),
     StoresScreen(),
     CartScreen(),
     ProfileScreen(),
@@ -42,6 +44,10 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Image.asset("assets/icons/love.png",width: 25,),
             label: "Favorites",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.category_outlined),
+            label: "Categories",
           ),
           BottomNavigationBarItem(
             icon: Image.asset("assets/icons/mart.png",width: 25,),
