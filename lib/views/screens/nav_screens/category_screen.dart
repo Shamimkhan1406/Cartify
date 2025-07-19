@@ -15,6 +15,7 @@ class CategoryScreen extends StatefulWidget {
 class _CategoryScreenState extends State<CategoryScreen> {
   // a future that will hold the list of categories once loaded from the api
   late Future<List<Category>> futureCategories;
+  Category? _selectedCategory;
   @override
   void initState() {
     // TODO: implement initState
@@ -54,11 +55,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       itemBuilder: (context, index) {
                         final category = categories[index];
                         return ListTile(
+                          onTap: () {
+                            setState(() {
+                              _selectedCategory = category;
+                            });
+                          },
                           title: Text(
                             category.name,
                             style: GoogleFonts.quicksand(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
+                              color:
+                                  _selectedCategory == category
+                                      ? Colors.blue
+                                      : Colors.black,
                             ),
                           ),
                         );
@@ -68,6 +78,40 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 },
               ),
             ),
+          ),
+          // display the selected category banner
+          Expanded(
+            flex: 5,
+            child:
+                _selectedCategory != null
+                    ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            _selectedCategory!.name,
+                            style: GoogleFonts.quicksand(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: 200,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(_selectedCategory!.image),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                    : Container(),
           ),
         ],
       ),
