@@ -1,5 +1,7 @@
 import 'package:cartify/controllers/category_controller.dart';
+import 'package:cartify/controllers/subcategory_controller.dart';
 import 'package:cartify/models/category.dart';
+import 'package:cartify/models/subcategory.dart';
 import 'package:cartify/views/screens/nav_screens/widgets/banner_widget.dart';
 import 'package:cartify/views/screens/nav_screens/widgets/header_widget.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +18,27 @@ class _CategoryScreenState extends State<CategoryScreen> {
   // a future that will hold the list of categories once loaded from the api
   late Future<List<Category>> futureCategories;
   Category? _selectedCategory;
+  List<SubCategory> _subcategories =
+      []; // list to hold the subcategories of the selected category <SubCategory>
+  final SubCategoryController _subcategoryController =
+      SubCategoryController(); // instance of the SubCategoryController
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     futureCategories = CategoryController().loadCategories();
+  }
+
+  // this function will load subcategories of the selected category based on the category name
+  Future<void> _loadSubcategories(String categoryName) async {
+    final subcategories = await _subcategoryController
+        .getSubCategoryByCategoryName(categoryName);
+    print(
+      "Fetched ${subcategories.length} subcategories for $categoryName",
+    ); // Debug print
+    setState(() {
+      _subcategories = subcategories;
+    });
   }
 
   @override
@@ -59,6 +77,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             setState(() {
                               _selectedCategory = category;
                             });
+                            _loadSubcategories(category.name);
                           },
                           title: Text(
                             category.name,
@@ -87,6 +106,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        //Text("Subcategories Count: ${_subcategories.length}"),// display the number of subcategories
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
@@ -103,12 +123,58 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             height: 200,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: NetworkImage(_selectedCategory!.image),
+                                image: NetworkImage(_selectedCategory!.banner),
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
-                        )
+                        ),
+                        _subcategories.isNotEmpty
+                            ? GridView.builder(
+                              shrinkWrap: true,
+                              itemCount: _subcategories.length,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    crossAxisSpacing: 4,
+                                    mainAxisSpacing: 4,
+                                  ),
+                              itemBuilder: (context, index) {
+                                final subcategory = _subcategories[index];
+                                return Column(
+                                  children: [
+                                    Container(
+                                      width: 66,
+                                      height: 66,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.shade50,
+                                      ),
+                                      child: Center(
+                                        child: Image.network(
+                                          subcategory.image.isNotEmpty
+                                              ? subcategory.image
+                                              : "https://via.placeholder.com/60",
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Text(subcategory.subCategoryName),
+                                    ),
+                                  ],
+                                );
+                              },
+                            )
+                            : Center(
+                              child: Text(
+                                "No subcategories available",
+                                style: GoogleFonts.quicksand(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
                       ],
                     )
                     : Container(),
