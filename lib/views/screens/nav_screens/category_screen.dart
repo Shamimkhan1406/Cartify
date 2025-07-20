@@ -27,6 +27,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
     // TODO: implement initState
     super.initState();
     futureCategories = CategoryController().loadCategories();
+    // once the categories are loaded, load the subcategories of the first category
+    futureCategories.then((categories){
+      // iterate over the categories and load the fashion subcategories
+      for (var category in categories){
+        if (category.name == "Fashion"){
+          // if Fashion category is found, set it as the selected category
+          setState(() {
+            _selectedCategory = category;
+          });
+          // load the subcategories of the Fashion category
+          _loadSubcategories(category.name);
+        }
+      }
+    });
   }
 
   // this function will load subcategories of the selected category based on the category name
