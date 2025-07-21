@@ -19,7 +19,7 @@ class InnerBannerWidget extends StatelessWidget {
         // clipBehavior: Clip.hardEdge,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(4),
-          child: FittedBox(child: Image.network(image, fit: BoxFit.cover)),
+          child: Image.network(image, fit: BoxFit.cover),
         ),
       ),
     );
