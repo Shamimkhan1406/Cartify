@@ -3,6 +3,7 @@ import 'package:cartify/models/category.dart';
 import 'package:cartify/models/subcategory.dart';
 import 'package:cartify/views/screens/detail/screens/widgets/inner_banner_widget.dart';
 import 'package:cartify/views/screens/detail/screens/widgets/inner_header_widget.dart';
+import 'package:cartify/views/screens/nav_screens/widgets/subcategory_tile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -65,27 +66,7 @@ class _InnerCategoryScreenState extends State<InnerCategoryScreen> {
                     ),
                     itemBuilder: (context, index) {
                       final subcategory = subcategories[index];
-                      return InkWell(
-                        onTap: (){
-                          // Navigator.push(context, MaterialPageRoute(builder: (context){
-                          //   return InnerCategoryScreen(category: category,);
-                          // }));
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (subcategory.image.isNotEmpty)
-                              Image.network(subcategory.image, height: 72, width: 75,),
-                            Text(
-                              subcategory.subCategoryName,
-                              style: GoogleFonts.quicksand(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
+                      return SubcategoryTileWidget(title: subcategory.subCategoryName, image: subcategory.image);
                     },
                   );
                 }
