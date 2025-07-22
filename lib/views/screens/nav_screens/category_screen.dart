@@ -4,6 +4,7 @@ import 'package:cartify/models/category.dart';
 import 'package:cartify/models/subcategory.dart';
 import 'package:cartify/views/screens/nav_screens/widgets/banner_widget.dart';
 import 'package:cartify/views/screens/nav_screens/widgets/header_widget.dart';
+import 'package:cartify/views/screens/nav_screens/widgets/subcategory_tile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -65,6 +66,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         child: HeaderWidget(),
       ),
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             flex: 2,
@@ -117,79 +119,62 @@ class _CategoryScreenState extends State<CategoryScreen> {
             flex: 5,
             child:
                 _selectedCategory != null
-                    ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //Text("Subcategories Count: ${_subcategories.length}"),// display the number of subcategories
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            _selectedCategory!.name,
-                            style: GoogleFonts.quicksand(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: 200,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(_selectedCategory!.banner),
-                                fit: BoxFit.cover,
+                    ? SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //Text("Subcategories Count: ${_subcategories.length}"),// display the number of subcategories
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              _selectedCategory!.name,
+                              style: GoogleFonts.quicksand(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
                               ),
                             ),
                           ),
-                        ),
-                        _subcategories.isNotEmpty
-                            ? GridView.builder(
-                              shrinkWrap: true,
-                              itemCount: _subcategories.length,
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3,
-                                    crossAxisSpacing: 4,
-                                    mainAxisSpacing: 4,
-                                  ),
-                              itemBuilder: (context, index) {
-                                final subcategory = _subcategories[index];
-                                return Column(
-                                  children: [
-                                    Container(
-                                      width: 66,
-                                      height: 66,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.shade50,
-                                      ),
-                                      child: Center(
-                                        child: Image.network(
-                                          subcategory.image.isNotEmpty
-                                              ? subcategory.image
-                                              : "https://via.placeholder.com/60",
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    Center(
-                                      child: Text(subcategory.subCategoryName),
-                                    ),
-                                  ],
-                                );
-                              },
-                            )
-                            : Center(
-                              child: Text(
-                                "No subcategories available",
-                                style: GoogleFonts.quicksand(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              height: 200,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(_selectedCategory!.banner),
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
-                      ],
+                          ),
+                          _subcategories.isNotEmpty
+                              ? GridView.builder(
+                                
+                                shrinkWrap: true,
+                                itemCount: _subcategories.length,
+                                physics: const NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      crossAxisSpacing: 4,
+                                      mainAxisSpacing: 4,
+                                      childAspectRatio: 2/3
+                                    ),
+                                itemBuilder: (context, index) {
+                                  final subcategory = _subcategories[index];
+                                  return SubcategoryTileWidget(title: subcategory.subCategoryName, image: subcategory.image);
+                                },
+                              )
+                              : Center(
+                                child: Text(
+                                  "No subcategories available",
+                                  style: GoogleFonts.quicksand(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                        ],
+                      ),
                     )
                     : Container(),
           ),
