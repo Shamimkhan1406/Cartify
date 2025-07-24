@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:cartify/models/category.dart';
-import 'package:cartify/services/manage_http_response.dart';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 import '../global_variables.dart';

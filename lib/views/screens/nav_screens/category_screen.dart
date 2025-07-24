@@ -2,7 +2,6 @@ import 'package:cartify/controllers/category_controller.dart';
 import 'package:cartify/controllers/subcategory_controller.dart';
 import 'package:cartify/models/category.dart';
 import 'package:cartify/models/subcategory.dart';
-import 'package:cartify/views/screens/nav_screens/widgets/banner_widget.dart';
 import 'package:cartify/views/screens/nav_screens/widgets/header_widget.dart';
 import 'package:cartify/views/screens/nav_screens/widgets/subcategory_tile_widget.dart';
 import 'package:flutter/material.dart';

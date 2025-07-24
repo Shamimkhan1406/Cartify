@@ -1,6 +1,5 @@
 import 'package:cartify/models/category.dart';
 import 'package:cartify/views/screens/detail/screens/widgets/inner_category_content_widget.dart';
-import 'package:cartify/views/screens/detail/screens/widgets/inner_header_widget.dart';
 import 'package:cartify/views/screens/nav_screens/cart_screen.dart';
 import 'package:cartify/views/screens/nav_screens/category_screen.dart';
 import 'package:cartify/views/screens/nav_screens/favorites_screen.dart';
