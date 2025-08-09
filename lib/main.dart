@@ -28,6 +28,9 @@ class MyApp extends ConsumerWidget {
     if(token != null && userJson != null){
       ref.read(userProvider.notifier).setUser(userJson);
     }
+    else{
+      ref.read(userProvider.notifier).signOut();
+    }
     
   }
   // This widget is the root of your application.
