@@ -1,5 +1,6 @@
 import 'package:cartify/controllers/product_controller.dart';
 import 'package:cartify/models/product.dart';
+import 'package:cartify/views/screens/nav_screens/widgets/product_item_widget.dart';
 import 'package:flutter/material.dart';
 
 class PopularProductsWidget extends StatefulWidget {
@@ -31,21 +32,16 @@ class _PopularProductsWidgetState extends State<PopularProductsWidget> {
       }
       else{
         final products = snapshot.data!;
-        return ListView.builder(
-          itemCount: products.length,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            final product = products[index];
-            return ListTile(
-              leading: Image.network(product.images[1], width: 50, height: 50, fit: BoxFit.cover),
-              title: Text(product.productName),
-              subtitle: Text('\$${product.productPrice.toStringAsFixed(2)}'),
-              onTap: () {
-                // Handle product tap
-                // You can navigate to product details page or show a dialog
-              },
-            );
-          },
+        return SizedBox(
+          height: 250,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              final product = products[index];
+              return ProductItemWidget(product: product,);
+            },
+          ),
         );
 
       }
