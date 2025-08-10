@@ -1,8 +1,12 @@
+import 'package:cartify/controllers/product_controller.dart';
 import 'package:cartify/controllers/subcategory_controller.dart';
 import 'package:cartify/models/category.dart';
+import 'package:cartify/models/product.dart';
 import 'package:cartify/models/subcategory.dart';
 import 'package:cartify/views/screens/detail/screens/widgets/inner_banner_widget.dart';
 import 'package:cartify/views/screens/detail/screens/widgets/inner_header_widget.dart';
+import 'package:cartify/views/screens/nav_screens/widgets/product_item_widget.dart';
+import 'package:cartify/views/screens/nav_screens/widgets/reusable_text_widget.dart';
 import 'package:cartify/views/screens/nav_screens/widgets/subcategory_tile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,21 +16,28 @@ class InnerCategoryContentWidget extends StatefulWidget {
 
   const InnerCategoryContentWidget({super.key, required this.category});
 
-
-
   @override
-  State<InnerCategoryContentWidget> createState() => _InnerCategoryContentWidgetState();
+  State<InnerCategoryContentWidget> createState() =>
+      _InnerCategoryContentWidgetState();
 }
 
-class _InnerCategoryContentWidgetState extends State<InnerCategoryContentWidget> {
+class _InnerCategoryContentWidgetState
+    extends State<InnerCategoryContentWidget> {
   late Future<List<SubCategory>> subCategories;
+  late Future<List<Product>> futureProducts;
   SubCategoryController subcategoryController = SubCategoryController();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    subCategories = subcategoryController.getSubCategoryByCategoryName(widget.category.name);
+    subCategories = subcategoryController.getSubCategoryByCategoryName(
+      widget.category.name,
+    );
+    futureProducts = ProductController().loadProductByCategory(
+      widget.category.name,
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,12 +50,13 @@ class _InnerCategoryContentWidgetState extends State<InnerCategoryContentWidget>
       body: SingleChildScrollView(
         child: Column(
           children: [
-            InnerBannerWidget(image: widget.category.banner,),
-            Text("Shop by Category", style: GoogleFonts.quicksand(
-              fontWeight: FontWeight.bold,
-              fontSize: 19,
-
-            ),
+            InnerBannerWidget(image: widget.category.banner),
+            Text(
+              "Shop by Category",
+              style: GoogleFonts.quicksand(
+                fontWeight: FontWeight.bold,
+                fontSize: 19,
+              ),
             ),
             FutureBuilder(
               future: subCategories,
@@ -54,25 +66,70 @@ class _InnerCategoryContentWidgetState extends State<InnerCategoryContentWidget>
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No sub categories available'));
+                  return const Center(
+                    child: Text('No sub categories available'),
+                  );
                 } else {
                   final subcategories = snapshot.data!;
                   return SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Column(
-                        children: List.generate((subcategories.length/7).ceil(), (setIndex){
-                          // for each row calculate the starting index and ending index
-                          final start = setIndex * 7;
-                          final end = start + 7;
-                          // create a padding widget around each row
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              // create a row of subcategory tiles
-                              children: subcategories.sublist(start,end>subcategories.length ? subcategories.length : end).map((subcategory)=>SubcategoryTileWidget(title: subcategory.subCategoryName, image: subcategory.image)).toList(),
-                            ),
-                          );
-                        })
+                      children: List.generate((subcategories.length / 7).ceil(), (
+                        setIndex,
+                      ) {
+                        // for each row calculate the starting index and ending index
+                        final start = setIndex * 7;
+                        final end = start + 7;
+                        // create a padding widget around each row
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            // create a row of subcategory tiles
+                            children:
+                                subcategories
+                                    .sublist(
+                                      start,
+                                      end > subcategories.length
+                                          ? subcategories.length
+                                          : end,
+                                    )
+                                    .map(
+                                      (subcategory) => SubcategoryTileWidget(
+                                        title: subcategory.subCategoryName,
+                                        image: subcategory.image,
+                                      ),
+                                    )
+                                    .toList(),
+                          ),
+                        );
+                      }),
+                    ),
+                  );
+                }
+              },
+            ),
+            ReusableTextWidget(title: 'Populer Products', subTitle: 'View All'),
+            // Here you can add a widget to display popular products related to the category
+            FutureBuilder(
+              future: futureProducts,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No products found under this category.'));
+                } else {
+                  final products = snapshot.data!;
+                  return SizedBox(
+                    height: 250,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        final product = products[index];
+                        return ProductItemWidget(product: product);
+                      },
                     ),
                   );
                 }
