@@ -78,4 +78,12 @@ class CartNotifier extends StateNotifier<Map<String, Cart>> {
     // notify listeners about the state change
     state = {...state};
   }
+  // method to calculate the total price of items in the cart
+  double calculateTotalAmount(){
+    double totalAmount = 0.0;
+    state.forEach((productId, cartItem) {
+      totalAmount += cartItem.productPrice * cartItem.quantity;
+    });
+    return totalAmount;
+  }
 }
