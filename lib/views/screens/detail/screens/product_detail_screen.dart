@@ -20,7 +20,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              widget.product.productName,
+              'Product Details',
               style: GoogleFonts.quicksand(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -88,7 +88,84 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  widget.product.productName,
+                  style: GoogleFonts.roboto(
+                    color: Colors.deepPurple,
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  '\$${widget.product.productPrice}',
+                  style: GoogleFonts.roboto(
+                    color: Colors.deepPurple,
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              widget.product.category,
+              style: GoogleFonts.roboto(color: Colors.grey, fontSize: 16),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'About',
+                  style: GoogleFonts.lato(
+                    color: Colors.blueGrey,
+                    fontSize: 17,
+                    letterSpacing: 1.7,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  widget.product.description,
+                  style: GoogleFonts.mochiyPopOne(letterSpacing: 2),
+                ),
+              ],
+            ),
+          ),
         ],
+      ),
+      bottomSheet: Padding(
+        padding: EdgeInsets.all(8),
+        child: InkWell(
+          onTap: () {},
+          child: Container(
+            width: 386,
+            height: 46,
+            clipBehavior: Clip.hardEdge,
+            decoration: BoxDecoration(
+              color: Colors.deepPurple,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Center(
+              child: Text(
+                'Add to Cart',
+                style: GoogleFonts.quicksand(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
