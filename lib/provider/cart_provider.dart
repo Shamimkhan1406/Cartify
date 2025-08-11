@@ -87,3 +87,7 @@ class CartNotifier extends StateNotifier<Map<String, Cart>> {
     return totalAmount;
   }
 }
+// define a state notifier provider to expose an instance of CartNotifier 
+final cartProvider = StateNotifierProvider<CartNotifier, Map<String, Cart>>((ref) {
+  return CartNotifier();
+});

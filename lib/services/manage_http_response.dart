@@ -28,5 +28,9 @@ void manageHttpResponse({
   }
 }
 void showSnackBar(BuildContext context, String message){
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    margin: const EdgeInsets.all(15),
+    behavior: SnackBarBehavior.floating,
+    content: Text(message)
+  ));
 }

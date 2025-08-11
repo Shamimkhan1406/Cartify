@@ -1,19 +1,23 @@
 import 'package:cartify/models/product.dart';
+import 'package:cartify/provider/cart_provider.dart';
+import 'package:cartify/services/manage_http_response.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ProductDetailScreen extends StatefulWidget {
+class ProductDetailScreen extends ConsumerStatefulWidget {
   final Product product;
 
-  const ProductDetailScreen({super.key, required this.product});
+  ProductDetailScreen({Key? key, required this.product}) : super(key: key);
 
   @override
-  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+  _ProductDetailScreenState createState() => _ProductDetailScreenState();
 }
 
-class _ProductDetailScreenState extends State<ProductDetailScreen> {
+class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
+    final _cartProvider = ref.read(cartProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -135,7 +139,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
                 Text(
                   widget.product.description,
-                  style: GoogleFonts.mochiyPopOne(letterSpacing: 2),
+                  style: GoogleFonts.lato(letterSpacing: 1.5),
                 ),
               ],
             ),
@@ -145,7 +149,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       bottomSheet: Padding(
         padding: EdgeInsets.all(8),
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            _cartProvider.addProductToCart(
+              productName: widget.product.productName,
+              productPrice: widget.product.productPrice,
+              category: widget.product.category,
+              images: widget.product.images,
+              vendorId: widget.product.vendorId,
+              productQuantity: widget.product.quantity,
+              quantity: 1,
+              productId: widget.product.id,
+              description: widget.product.description,
+              fullName: widget.product.fullName,
+            );
+            showSnackBar(context, '${widget.product.productName} added to cart');
+          },
           child: Container(
             width: 386,
             height: 46,
