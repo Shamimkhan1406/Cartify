@@ -1,4 +1,6 @@
 import 'package:cartify/provider/cart_provider.dart';
+import 'package:cartify/services/manage_http_response.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +16,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   @override
   Widget build(BuildContext context) {
     final cartData = ref.watch(cartProvider);
+    final _cartProvider = ref.read(cartProvider.notifier);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(
@@ -156,6 +159,100 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 20),
+                    ListView.builder(
+                      itemCount: cartData.length,
+                      shrinkWrap: true,
+                      
+                      itemBuilder: (context, index){
+                        final cartItem = cartData.values.toList()[index];
+                        return Card(
+                          child: SizedBox(
+                            height: 200,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 100,
+                                  width: 100,
+                                  child: Image.network(
+                                    cartItem.images[0],
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(cartItem.productName,
+                                      style: GoogleFonts.lato(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    Text(cartItem.category,
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.blueGrey,
+                                      ),
+                                    ),
+                                    Text(
+                                      '\₹ ${cartItem.productPrice.toString()}',
+                                      style: GoogleFonts.lato(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.deepPurple,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          height: 40,
+                                          width: 120,
+                                          decoration: BoxDecoration(
+                                            color: const Color.fromARGB(54, 192, 156, 255),
+                                            borderRadius: BorderRadius.circular(14),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              IconButton(onPressed: (){
+                                                _cartProvider.decrementProductQuantity(cartItem.productId);
+                                              }, icon: Icon(CupertinoIcons.minus,
+                                                color: Colors.black,
+                                              )),
+                                              Text(cartItem.quantity.toString(),
+                                                style: GoogleFonts.lato(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              IconButton(onPressed: (){
+                                                _cartProvider.incrementProductQuantity(cartItem.productId);
+                                              }, icon: Icon(CupertinoIcons.plus,
+                                                color: Colors.black,
+                                              )),
+                                            ],
+
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        _cartProvider.removeCartItem(cartItem.productId);
+                                        showSnackBar(context, '${cartItem.productName} removed from cart');
+                                      },
+                                      icon: Icon(CupertinoIcons.delete, color: Colors.black),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      })
                   ],
                 ),
               ),
