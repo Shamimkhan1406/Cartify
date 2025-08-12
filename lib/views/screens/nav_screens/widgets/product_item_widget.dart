@@ -27,11 +27,16 @@ class ProductItemWidget extends StatelessWidget {
               ),
               child: Stack(
                 children: [
-                  Image.network(
-                    product.images[0],
-                    height: 170,
-                    width: 170,
-                    fit: BoxFit.cover,
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Image.network(
+                      product.images[0],
+                      height: 170,
+                      width: 170,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   Positioned(
                     right: 4,
