@@ -18,6 +18,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   Widget build(BuildContext context) {
     final cartData = ref.watch(cartProvider);
     final _cartProvider = ref.read(cartProvider.notifier);
+    final _totalAmount = _cartProvider.calculateTotalAmount();
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(
@@ -135,7 +136,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                               height: 49,
                               clipBehavior: Clip.hardEdge,
                               decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 218, 190, 255),
+                                color: const Color.fromARGB(255, 221, 205, 243),
                               ),
                             ),
                           ),
@@ -297,6 +298,88 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   ],
                 ),
               ),
+      bottomNavigationBar: Container(
+        height: 89,
+        width: 416,
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: 416,
+                height: 89,
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(107, 221, 205, 243),
+                  border: Border.all(
+                    color: const Color.fromARGB(255, 199, 167, 255),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment(-0.63, -0.26),
+              child: Text(
+                'Subtotal: ',
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: const Color.fromARGB(255, 155, 138, 202))
+                ),
+              ),
+            Align(
+              alignment: Alignment(-0.19, -0.31),
+              child: Text(
+                '\₹ ${_totalAmount.toStringAsFixed(2)}',
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: const Color.fromARGB(255, 131, 112, 184),
+                ),
+              ),
+            ),
+            Align(alignment: Alignment(0.83, -1),
+            child: InkWell(
+              onTap: (){},
+              child: Container(
+                width: 166,
+                height: 71,
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  color: _totalAmount == 0 ? Colors.grey : const Color.fromARGB(255, 168, 137, 255),
+                  borderRadius: BorderRadius.circular(0),
+                ),
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Checkout',
+                          style: GoogleFonts.quicksand(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        CupertinoIcons.chevron_forward,
+                        color: Colors.white,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
