@@ -1,5 +1,6 @@
 import 'package:cartify/provider/cart_provider.dart';
 import 'package:cartify/services/manage_http_response.dart';
+import 'package:cartify/views/screens/detail/screens/checkout_screen.dart';
 import 'package:cartify/views/screens/main_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -343,7 +344,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             ),
             Align(alignment: Alignment(0.83, -1),
             child: InkWell(
-              onTap: (){},
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>const CheckoutScreen()));
+              },
               child: Container(
                 width: 166,
                 height: 71,
