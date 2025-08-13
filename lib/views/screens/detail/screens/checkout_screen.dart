@@ -1,16 +1,20 @@
+import 'package:cartify/provider/cart_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CheckoutScreen extends StatefulWidget {
+class CheckoutScreen extends ConsumerStatefulWidget {
   const CheckoutScreen({super.key});
 
   @override
-  State<CheckoutScreen> createState() => _CheckoutScreenState();
+  _CheckoutScreenState createState() => _CheckoutScreenState();
 }
 
-class _CheckoutScreenState extends State<CheckoutScreen> {
+class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   @override
   Widget build(BuildContext context) {
+    // Fetch the cart items from the cart provider
+    final cartData = ref.watch(cartProvider);
     return Scaffold(
       appBar: AppBar(title: const Text('Checkout')),
       body: Padding(
@@ -120,7 +124,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   height: 43,
                                   clipBehavior: Clip.hardEdge,
                                   decoration: BoxDecoration(
-                                    color: const Color.fromARGB(255, 237, 231, 253),
+                                    color: const Color.fromARGB(
+                                      255,
+                                      237,
+                                      231,
+                                      253,
+                                    ),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Stack(
@@ -154,6 +163,131 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ),
                     ],
                   ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Your items',
+                style: GoogleFonts.lato(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  height: 1.1,
+                ),
+              ),
+              SizedBox(height: 10),
+              Flexible(
+                child: ListView.builder(
+                  itemCount: cartData.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final cartItem = cartData.values.toList()[index];
+                    return InkWell(
+                      onTap: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Container(
+                          width: 316,
+                          height: 91,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: const Color.fromARGB(255, 168, 137, 255),
+                            ),
+                          ),
+                          child: Stack(
+                            clipBehavior: Clip.hardEdge,
+                            children: [
+                              Positioned(
+                                left: 6,
+                                top: 6,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: 78,
+                                      height: 78,
+                                      clipBehavior: Clip.hardEdge,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(9),
+                                        color: const Color.fromARGB(
+                                          255,
+                                          214,
+                                          199,
+                                          255,
+                                        ),
+                                      ),
+                                      child: Image.network(
+                                        cartItem.images[0],
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Container(
+                                      height: 78,
+                                      alignment: Alignment(0, -0.51),
+                                      child: SizedBox(
+                                        //width: double.infinity,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            SizedBox(
+                                              //width: double.infinity,
+                                              child: Text(
+                                                cartItem.productName,
+                                                style: GoogleFonts.lato(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  letterSpacing: 1.3,
+                                                ),
+                                                //overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            SizedBox(height: 5),
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                cartItem.category,
+                                                style: GoogleFonts.lato(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.blueGrey,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                left: 270,
+                                top: 30,
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    '₹ ${cartItem.productPrice.toStringAsFixed(2)}',
+                                    style: GoogleFonts.lato(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.deepPurple,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
