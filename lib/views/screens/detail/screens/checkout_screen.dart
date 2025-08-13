@@ -311,7 +311,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 ),
                 value: 'stripe',
                 groupValue: selectedPaymentMethod,
-                onChanged: (String?value) {
+                onChanged: (String? value) {
                   setState(() {
                     selectedPaymentMethod = value!;
                   });
@@ -327,13 +327,36 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 ),
                 value: 'cashOnDelivery',
                 groupValue: selectedPaymentMethod,
-                onChanged: (String?value) {
+                onChanged: (String? value) {
                   setState(() {
                     selectedPaymentMethod = value!;
                   });
                 },
               ),
             ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          width: 338,
+          height: 58,
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 168, 137, 255),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Center(
+            child: Text(
+              selectedPaymentMethod == 'stripe'
+                  ? 'Pay now'
+                  : 'Place order',
+              style: GoogleFonts.montserrat(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
       ),
