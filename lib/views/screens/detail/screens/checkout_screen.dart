@@ -11,6 +11,7 @@ class CheckoutScreen extends ConsumerStatefulWidget {
 }
 
 class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
+  String selectedPaymentMethod = 'stripe'; // Default payment method
   @override
   Widget build(BuildContext context) {
     // Fetch the cart items from the cart provider
@@ -289,6 +290,48 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                     );
                   },
                 ),
+              ),
+              //SizedBox(height: 10),
+              Text(
+                'Choose payment method',
+                style: GoogleFonts.lato(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  height: 1.1,
+                ),
+              ),
+              SizedBox(height: 10),
+              RadioListTile<String>(
+                title: Text(
+                  'Stripe',
+                  style: GoogleFonts.lato(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                value: 'stripe',
+                groupValue: selectedPaymentMethod,
+                onChanged: (String?value) {
+                  setState(() {
+                    selectedPaymentMethod = value!;
+                  });
+                },
+              ),
+              RadioListTile<String>(
+                title: Text(
+                  'Cash on Delivery',
+                  style: GoogleFonts.lato(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                value: 'cashOnDelivery',
+                groupValue: selectedPaymentMethod,
+                onChanged: (String?value) {
+                  setState(() {
+                    selectedPaymentMethod = value!;
+                  });
+                },
               ),
             ],
           ),
