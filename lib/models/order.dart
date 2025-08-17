@@ -17,9 +17,8 @@ class Order {
   final String vendorId;
   final bool processing;
   final bool delivered;
-  final DateTime createdAt;
 
-  Order({required this.id, required this.fullName, required this.email, required this.state, required this.city, required this.locality, required this.productName, required this.productPrice, required this.quantity, required this.category, required this.image, required this.buyerId, required this.vendorId, required this.processing, required this.delivered, required this.createdAt});
+  Order({required this.id, required this.fullName, required this.email, required this.state, required this.city, required this.locality, required this.productName, required this.productPrice, required this.quantity, required this.category, required this.image, required this.buyerId, required this.vendorId, required this.processing, required this.delivered,});
   
 
   Map<String, dynamic> toMap() {
@@ -39,7 +38,6 @@ class Order {
       'vendorId': vendorId,
       'processing': processing,
       'delivered': delivered,
-      'createdAt': createdAt.millisecondsSinceEpoch,
     };
   }
 
@@ -60,7 +58,6 @@ class Order {
       vendorId: map['vendorId'] as String,
       processing: map['processing'] as bool,
       delivered: map['delivered'] as bool,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
     );
   }
 
