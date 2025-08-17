@@ -1,6 +1,7 @@
 import 'package:cartify/controllers/order_controller.dart';
 import 'package:cartify/provider/cart_provider.dart';
 import 'package:cartify/provider/user_provider.dart';
+import 'package:cartify/views/screens/detail/screens/shipping_address_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,7 +30,14 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShippingAddressScreen(),
+                    ),
+                  );
+                },
                 child: SizedBox(
                   width: 335,
                   height: 74,
@@ -346,13 +354,21 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         child:
             ref.read(userProvider)!.state == ""
                 ? TextButton(
-                  onPressed: () {},
-                  child: Text("Please enter your address",
-                  style: GoogleFonts.lato(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 168, 137, 255),
-                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ShippingAddressScreen(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "Please enter your address",
+                    style: GoogleFonts.lato(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: const Color.fromARGB(255, 168, 137, 255),
+                    ),
                   ),
                 )
                 : InkWell(
