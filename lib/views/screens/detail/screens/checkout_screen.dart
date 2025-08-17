@@ -1,4 +1,6 @@
+import 'package:cartify/controllers/order_controller.dart';
 import 'package:cartify/provider/cart_provider.dart';
+import 'package:cartify/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,11 +13,13 @@ class CheckoutScreen extends ConsumerStatefulWidget {
 }
 
 class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
+  final OrderController _orderController = OrderController();
   String selectedPaymentMethod = 'stripe'; // Default payment method
   @override
   Widget build(BuildContext context) {
     // Fetch the cart items from the cart provider
     final cartData = ref.watch(cartProvider);
+    final _cartProvider = ref.read(cartProvider.notifier);
     return Scaffold(
       appBar: AppBar(title: const Text('Checkout')),
       body: Padding(
@@ -339,22 +343,56 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container(
-          width: 338,
-          height: 58,
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 168, 137, 255),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Center(
-            child: Text(
-              selectedPaymentMethod == 'stripe'
-                  ? 'Pay now'
-                  : 'Place order',
-              style: GoogleFonts.montserrat(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+        child: InkWell(
+          onTap: () async {
+            if (selectedPaymentMethod == 'stripe') {
+              // Handle Stripe payment logic here
+              // For example, navigate to a Stripe payment screen
+            } else {
+              // Handle Cash on Delivery logic here
+              // For example, place the order directly
+              await Future.forEach(_cartProvider.getCartItems.entries, (entry) {
+                var item = entry.value;
+                _orderController.uploadOrder(
+                  id: '',
+                  fullName: ref.read(userProvider)!.fullName,
+                  email: ref.read(userProvider)!.email,
+                  state: "west bengal", // You can replace this with actual state
+                  city: "kolkata", // You can replace this with actual city
+                  locality: "sector 5", // You can replace this with actual locality
+                  //state: ref.read(userProvider)!.state,
+                  //city: ref.read(userProvider)!.city,
+                  //locality: ref.read(userProvider)!.locality,
+                  productName: item.productName,
+                  productPrice: item.productPrice,
+                  quantity: item.quantity,
+                  category: item.category,
+                  image: item.images[0],
+                  buyerId: ref.read(userProvider)!.id,
+                  vendorId: item.vendorId,
+                  processing: true,
+                  delivered: false,
+                  context: context,
+                );
+              });
+            }
+          },
+
+          child: Container(
+            width: 338,
+            height: 58,
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 168, 137, 255),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Center(
+              child: Text(
+                selectedPaymentMethod == 'stripe' ? 'Pay now' : 'Place order',
+                style: GoogleFonts.montserrat(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
