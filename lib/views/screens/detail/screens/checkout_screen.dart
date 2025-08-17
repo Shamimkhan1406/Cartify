@@ -343,60 +343,79 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: InkWell(
-          onTap: () async {
-            if (selectedPaymentMethod == 'stripe') {
-              // Handle Stripe payment logic here
-              // For example, navigate to a Stripe payment screen
-            } else {
-              // Handle Cash on Delivery logic here
-              // For example, place the order directly
-              await Future.forEach(_cartProvider.getCartItems.entries, (entry) {
-                var item = entry.value;
-                _orderController.uploadOrder(
-                  id: '',
-                  fullName: ref.read(userProvider)!.fullName,
-                  email: ref.read(userProvider)!.email,
-                  state: "west bengal", // You can replace this with actual state
-                  city: "kolkata", // You can replace this with actual city
-                  locality: "sector 5", // You can replace this with actual locality
-                  //state: ref.read(userProvider)!.state,
-                  //city: ref.read(userProvider)!.city,
-                  //locality: ref.read(userProvider)!.locality,
-                  productName: item.productName,
-                  productPrice: item.productPrice,
-                  quantity: item.quantity,
-                  category: item.category,
-                  image: item.images[0],
-                  buyerId: ref.read(userProvider)!.id,
-                  vendorId: item.vendorId,
-                  processing: true,
-                  delivered: false,
-                  context: context,
-                );
-              });
-            }
-          },
+        child:
+            ref.read(userProvider)!.state == ""
+                ? TextButton(
+                  onPressed: () {},
+                  child: Text("Please enter your address",
+                  style: GoogleFonts.lato(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: const Color.fromARGB(255, 168, 137, 255),
+                  ),
+                  ),
+                )
+                : InkWell(
+                  onTap: () async {
+                    if (selectedPaymentMethod == 'stripe') {
+                      // Handle Stripe payment logic here
+                      // For example, navigate to a Stripe payment screen
+                    } else {
+                      // Handle Cash on Delivery logic here
+                      // For example, place the order directly
+                      await Future.forEach(_cartProvider.getCartItems.entries, (
+                        entry,
+                      ) {
+                        var item = entry.value;
+                        _orderController.uploadOrder(
+                          id: '',
+                          fullName: ref.read(userProvider)!.fullName,
+                          email: ref.read(userProvider)!.email,
+                          state:
+                              "west bengal", // You can replace this with actual state
+                          city:
+                              "kolkata", // You can replace this with actual city
+                          locality:
+                              "sector 5", // You can replace this with actual locality
+                          //state: ref.read(userProvider)!.state,
+                          //city: ref.read(userProvider)!.city,
+                          //locality: ref.read(userProvider)!.locality,
+                          productName: item.productName,
+                          productPrice: item.productPrice,
+                          quantity: item.quantity,
+                          category: item.category,
+                          image: item.images[0],
+                          buyerId: ref.read(userProvider)!.id,
+                          vendorId: item.vendorId,
+                          processing: true,
+                          delivered: false,
+                          context: context,
+                        );
+                      });
+                    }
+                  },
 
-          child: Container(
-            width: 338,
-            height: 58,
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 168, 137, 255),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(
-              child: Text(
-                selectedPaymentMethod == 'stripe' ? 'Pay now' : 'Place order',
-                style: GoogleFonts.montserrat(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  child: Container(
+                    width: 338,
+                    height: 58,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 168, 137, 255),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Text(
+                        selectedPaymentMethod == 'stripe'
+                            ? 'Pay now'
+                            : 'Place order',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }
