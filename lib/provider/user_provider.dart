@@ -28,6 +28,26 @@ class UserProvider extends StateNotifier<User?> {
   void signOut(){
     state = null;
   }
+  // methode to recreate the user state
+  void recreateUserState({
+    required String state,
+    required String city,
+    required String locality,
+
+  }){
+    if (this.state!=null){
+      this.state = User(
+        id: this.state!.id,// keep the existing id
+        fullName: this.state!.fullName,
+        email: this.state!.email,
+        state: state,
+        city: city,
+        locality: locality,
+        password: this.state!.password,
+        token: this.state!.token,
+      );
+    }
+  }
 }
 // make the data accecsible within the app
   final userProvider = StateNotifierProvider<UserProvider, User?> ((ref)=> UserProvider());

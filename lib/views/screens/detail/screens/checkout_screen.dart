@@ -14,10 +14,12 @@ class CheckoutScreen extends ConsumerStatefulWidget {
 }
 
 class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
+  
   final OrderController _orderController = OrderController();
   String selectedPaymentMethod = 'stripe'; // Default payment method
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userProvider);
     // Fetch the cart items from the cart provider
     final cartData = ref.watch(cartProvider);
     final _cartProvider = ref.read(cartProvider.notifier);
@@ -352,7 +354,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
         child:
-            ref.read(userProvider)!.state == ""
+            //ref.watch(userProvider)!.state == ""
+            user!.state.isEmpty
                 ? TextButton(
                   onPressed: () {
                     Navigator.push(
