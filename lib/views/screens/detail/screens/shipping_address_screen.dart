@@ -21,6 +21,7 @@ class _ShippingAddressScreenState extends ConsumerState<ShippingAddressScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
+    final updateUser = ref.read(userProvider.notifier);
     return Scaffold(
       backgroundColor: const Color.fromARGB(223, 255, 255, 255),
       appBar: AppBar(
@@ -121,7 +122,10 @@ class _ShippingAddressScreenState extends ConsumerState<ShippingAddressScreen> {
                 state: state,
                 city: city,
                 locality: locality,
-              );
+              ).whenComplete((){
+                updateUser.recreateUserState(state: state, city: city, locality: locality);
+                Navigator.pop(context);
+              });
             } else {
               print('validation failed');
             }

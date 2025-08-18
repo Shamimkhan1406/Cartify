@@ -14,7 +14,6 @@ class CheckoutScreen extends ConsumerStatefulWidget {
 }
 
 class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
-  
   final OrderController _orderController = OrderController();
   String selectedPaymentMethod = 'stripe'; // Default payment method
   @override
@@ -96,24 +95,43 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                                       SizedBox(height: 3),
                                       Align(
                                         alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'India',
-                                          style: GoogleFonts.lato(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
+                                        child:
+                                            user!.state.isNotEmpty
+                                                ? Text(
+                                                  user.locality,
+                                                  style: GoogleFonts.lato(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                )
+                                                : Text(
+                                                  'India',
+                                                  style: GoogleFonts.lato(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
                                       ),
                                       Align(
                                         alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Enter City',
-                                          style: GoogleFonts.lato(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.blueGrey,
-                                          ),
-                                        ),
+                                        child:
+                                            user.city.isNotEmpty
+                                                ? Text(
+                                                  user.city,
+                                                  style: GoogleFonts.lato(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors.blueGrey,
+                                                  ),
+                                                )
+                                                : Text(
+                                                  'Enter City',
+                                                  style: GoogleFonts.lato(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors.blueGrey,
+                                                  ),
+                                                ),
                                       ),
                                     ],
                                   ),
@@ -355,7 +373,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         padding: const EdgeInsets.all(8.0),
         child:
             //ref.watch(userProvider)!.state == ""
-            user!.state.isEmpty
+            user.state.isEmpty
                 ? TextButton(
                   onPressed: () {
                     Navigator.push(
