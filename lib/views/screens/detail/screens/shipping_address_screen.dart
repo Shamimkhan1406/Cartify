@@ -18,6 +18,35 @@ class _ShippingAddressScreenState extends ConsumerState<ShippingAddressScreen> {
   late String locality;
   // form key to validate the form fields
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  // show loading dialog while updating user location
+  _showLoadingDialog(){
+    showDialog(context: context, builder: (context){
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(width: 10),
+              Text(
+                "Updating...",
+                style: GoogleFonts.montserrat(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
@@ -116,6 +145,7 @@ class _ShippingAddressScreenState extends ConsumerState<ShippingAddressScreen> {
         child: InkWell(
           onTap: () {
             if (_formKey.currentState!.validate()) {
+              _showLoadingDialog();
               _authController.updateUserLocation(
                 context: context,
                 id: user!.id,
@@ -124,7 +154,8 @@ class _ShippingAddressScreenState extends ConsumerState<ShippingAddressScreen> {
                 locality: locality,
               ).whenComplete((){
                 updateUser.recreateUserState(state: state, city: city, locality: locality);
-                Navigator.pop(context);
+                Navigator.pop(context); // this will close the loading dialog
+                Navigator.pop(context); // this will close the shipping address screen
               });
             } else {
               print('validation failed');
