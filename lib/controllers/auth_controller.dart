@@ -134,4 +134,48 @@ class AuthController {
       showSnackBar(context, "Signout failed: ${e.toString()}");
     }
   }
+
+  // update user's state city and locality
+  Future<void> updateUserLocation({
+    required context,
+    required String id,
+    required String state,
+    required String city,
+    required String locality,
+  }) async{
+    try {
+      // make a PUT request to update the user location
+      http.Response response = await http.put(Uri.parse('$uri/api/users/$id'),
+      // encode the updated data the state city and locality as json
+      body: jsonEncode({
+        'state': state,
+        'city': city,
+        'locality': locality,
+      }),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+
+      );
+      manageHttpResponse(response: response, context: context, onSuccess: () async {
+        showSnackBar(context, "location updated successfully");
+        // decode the response body to get the updated user data
+        final updatedUser = jsonDecode(response.body);
+        // access shared prefferences to save the updated user data
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        // encode the updated user data as json
+        // this is to ensure that the user data is stored in the same format as before
+        final userJson = jsonEncode(updatedUser);
+        // update the app state with the updated user data using reverpod
+        // this is to ensure that the user data is updated in the app state
+        providerContainer.read(userProvider.notifier).setUser(userJson);
+        // store the updated user data in shared preferences for future use
+        // this allows the app to retrieve the updated user data even after the app is restarted
+        await preferences.setString("user", userJson);
+      });
+    } catch (e) {
+      print('Error updating user location: $e');
+      showSnackBar(context, "Location update failed: ${e.toString()}");
+    }
+  }
 }
