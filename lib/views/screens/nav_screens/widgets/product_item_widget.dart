@@ -12,7 +12,12 @@ class ProductItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetailScreen(product: product)));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetailScreen(product: product),
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -59,19 +64,33 @@ class ProductItemWidget extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 2),
             Text(
               product.productName,
               overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.roboto(fontSize: 14,fontWeight: FontWeight.w500),
+              style: GoogleFonts.roboto(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-            SizedBox(height: 4),
-            Text(product.category,
-                style: GoogleFonts.quicksand(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.blueGrey,
-                ))
+            SizedBox(height: 1),
+            Text(
+              product.category,
+              style: GoogleFonts.quicksand(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: Colors.blueGrey,
+              ),
+            ),
+            SizedBox(height: 1),
+            Text(
+              '₹${product.productPrice.toStringAsFixed(2)}',
+              style: GoogleFonts.roboto(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple,
+              ),
+            ),
           ],
         ),
       ),
