@@ -82,21 +82,33 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                                         alignment: Alignment.centerLeft,
                                         child: SizedBox(
                                           width: 114,
-                                          child: Text(
-                                            'Add address',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              height: 1.1,
-                                            ),
-                                          ),
+                                          child:
+                                              user!.state.isNotEmpty
+                                                  ? Text(
+                                                    'Address',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      height: 1.1,
+                                                    ),
+                                                  )
+                                                  : Text(
+                                                    'Add address',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      height: 1.1,
+                                                    ),
+                                                  ),
                                         ),
                                       ),
                                       SizedBox(height: 3),
                                       Align(
                                         alignment: Alignment.centerLeft,
                                         child:
-                                            user!.state.isNotEmpty
+                                            user.state.isNotEmpty
                                                 ? Text(
                                                   user.locality,
                                                   style: GoogleFonts.lato(
