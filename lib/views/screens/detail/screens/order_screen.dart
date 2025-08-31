@@ -256,6 +256,15 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                                         ),
                                       ),
                                     ),
+                                    Positioned(
+                                      top: 115,
+                                      left: 298,
+                                      child: Image.asset(
+                                        'assets/icons/delete.png',
+                                        width: 20,
+                                        height: 20,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
