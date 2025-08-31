@@ -40,8 +40,9 @@ class Order {
       'delivered': delivered,
     };
   }
+  String toJson() => json.encode(toMap());
 
-  factory Order.fromMap(Map<String, dynamic> map) {
+  factory Order.fromJson(Map<String, dynamic> map) {
     return Order(
       id: map['_id'] as String,
       fullName: map['fullName'] as String,
@@ -61,7 +62,7 @@ class Order {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  
 
-  factory Order.fromJson(String source) => Order.fromMap(json.decode(source) as Map<String, dynamic>);
+  //factory Order.fromJson(String source) => Order.fromMap(json.decode(source) as Map<String, dynamic>);
 }
