@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cartify/models/order.dart';
 import 'package:cartify/services/manage_http_response.dart';
 import 'package:http/http.dart' as http;
@@ -54,6 +56,32 @@ class OrderController {
     } catch (e) {
       showSnackBar(context, 'Error uploading order: $e');
       print('Error uploading order: $e');
+    }
+  }
+  // functions to get orders by buyer id
+  Future<List<Order>> loadOrders({required String buyerId}) async{
+    try {
+      // send http get request to the server
+      http.Response response = await http.get(Uri.parse('$uri/api/orders/$buyerId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      );
+    // check if the response is successful
+      if (response.statusCode == 200) {
+        // parse the response body into dynamic list 
+        // this convert the json data into a format that can be used in dart
+        List<dynamic> data = jsonDecode(response.body);
+        // map the dhynamic list to list of order object using the from json factory method
+        // this convert the lis to raw data into list of order object
+        List<Order> orders = data.map((order) => Order.fromJson(order)).toList();
+        return orders;
+      } else {
+        // throw an exception if the response is not successful
+        throw Exception('Failed to load orders');
+      }
+    } catch (e) {
+      throw Exception('Error loading orders: $e');
     }
   }
 }
