@@ -1,4 +1,5 @@
 import 'package:cartify/controllers/auth_controller.dart';
+import 'package:cartify/views/screens/detail/screens/order_screen.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -8,9 +9,17 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: ElevatedButton(onPressed: () async {
-        await authController.signOutUser(context: context);
-      }, child: Text("SignOut"))),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(child: ElevatedButton(onPressed: () async {
+            await authController.signOutUser(context: context);
+          }, child: Text("SignOut"))),
+          ElevatedButton(onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => OrderScreen()),);
+          }, child: Text('My Orders'))
+        ],
+      ),
     );
   }
 }
