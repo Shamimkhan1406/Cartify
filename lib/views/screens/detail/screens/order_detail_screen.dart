@@ -214,6 +214,91 @@ class OrderDetailScreen extends StatelessWidget {
               ),
             ),
           ),
+          // display address
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Container(
+              width: 336,
+              height: 195,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: const Color.fromARGB(255, 168, 137, 255),
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Delivery Address',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          '${orders.state} ${orders.city} ${orders.locality}',
+                          style: GoogleFonts.lato(
+                            fontSize: 16,
+                            letterSpacing: 1.5,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text('To ${orders.fullName}',
+                          style: GoogleFonts.roboto(
+                            fontSize: 17,
+                            letterSpacing: 1.5,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text('Order Id: ${orders.id}',
+                          style: GoogleFonts.lato(
+                            //fontSize: 17,
+                            letterSpacing: 1.5,
+                            //fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        
+                      ],
+                    ),
+                  ),
+                  orders.delivered == true ? 
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: ElevatedButton(onPressed: (){}, child: Text('Leave a Review',style: GoogleFonts.montserrat(
+                              //fontSize: 17,
+                              letterSpacing: 1.5,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),)),
+                  ) :
+                  // orders.processing == true ?
+                  // ElevatedButton(onPressed: (){}, child: Text('Cancel Order',style: GoogleFonts.lato(
+                  //           fontSize: 17,
+                  //           letterSpacing: 1.5,
+                  //           fontWeight: FontWeight.bold,
+                  //           color: Colors.black,
+                  //         ),)):
+                  SizedBox(
+
+                  )
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
