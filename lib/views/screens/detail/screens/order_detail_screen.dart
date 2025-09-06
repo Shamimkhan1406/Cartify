@@ -1,17 +1,31 @@
+import 'package:cartify/controllers/product_review_controller.dart';
 import 'package:cartify/models/order.dart';
+import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class OrderDetailScreen extends StatelessWidget {
+class OrderDetailScreen extends StatefulWidget {
   final Order orders;
   const OrderDetailScreen({super.key, required this.orders});
+
+  @override
+  State<OrderDetailScreen> createState() => _OrderDetailScreenState();
+}
+
+class _OrderDetailScreenState extends State<OrderDetailScreen> {
+  final TextEditingController _reviewController = TextEditingController();
+
+  final ProductReviewController _productReviewController =
+      ProductReviewController();
+
+  double rating = 0.0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          orders.productName,
+          widget.orders.productName,
           style: GoogleFonts.montserrat(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -74,7 +88,7 @@ class OrderDetailScreen extends StatelessWidget {
                                     top: 5,
                                     left: 10,
                                     child: Image.network(
-                                      orders.image,
+                                      widget.orders.image,
                                       width: 58,
                                       height: 67,
                                       fit: BoxFit.cover,
@@ -105,7 +119,7 @@ class OrderDetailScreen extends StatelessWidget {
                                           SizedBox(
                                             width: double.infinity,
                                             child: Text(
-                                              orders.productName,
+                                              widget.orders.productName,
                                               style: GoogleFonts.montserrat(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
@@ -119,7 +133,7 @@ class OrderDetailScreen extends StatelessWidget {
                                           Align(
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              orders.category,
+                                              widget.orders.category,
                                               style: GoogleFonts.montserrat(
                                                 fontSize: 12,
                                                 color: const Color(0xff9e9e9e),
@@ -132,7 +146,7 @@ class OrderDetailScreen extends StatelessWidget {
                                             alignment: Alignment.centerLeft,
 
                                             child: Text(
-                                              'Quantity: ${orders.quantity}',
+                                              'Quantity: ${widget.orders.quantity}',
                                               style: GoogleFonts.montserrat(
                                                 fontSize: 12,
                                                 color: const Color(0xff9e9e9e),
@@ -142,7 +156,7 @@ class OrderDetailScreen extends StatelessWidget {
                                           ),
                                           SizedBox(height: 5),
                                           Text(
-                                            '₹${orders.productPrice}',
+                                            '₹${widget.orders.productPrice}',
                                             style: GoogleFonts.montserrat(
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
@@ -167,9 +181,9 @@ class OrderDetailScreen extends StatelessWidget {
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
                                 color:
-                                    orders.delivered == true
+                                    widget.orders.delivered == true
                                         ? Colors.green
-                                        : orders.processing == true
+                                        : widget.orders.processing == true
                                         ? Colors.purpleAccent
                                         : Colors.red,
                                 borderRadius: BorderRadius.circular(4),
@@ -181,9 +195,9 @@ class OrderDetailScreen extends StatelessWidget {
                                     left: 9,
                                     top: 2,
                                     child: Text(
-                                      orders.delivered == true
+                                      widget.orders.delivered == true
                                           ? 'Delivered'
-                                          : orders.processing == true
+                                          : widget.orders.processing == true
                                           ? 'Processing'
                                           : 'Cancelled',
                                       style: GoogleFonts.montserrat(
@@ -219,7 +233,7 @@ class OrderDetailScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Container(
               width: 336,
-              height: orders.delivered == true ? 175 : 120,
+              height: widget.orders.delivered == true ? 175 : 120,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
@@ -247,7 +261,7 @@ class OrderDetailScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 8),
                         Text(
-                          '${orders.state} ${orders.city} ${orders.locality}',
+                          '${widget.orders.state} ${widget.orders.city} ${widget.orders.locality}',
                           style: GoogleFonts.lato(
                             fontSize: 16,
                             letterSpacing: 1.5,
@@ -255,7 +269,8 @@ class OrderDetailScreen extends StatelessWidget {
                             color: Colors.black,
                           ),
                         ),
-                        Text('To ${orders.fullName}',
+                        Text(
+                          'To ${widget.orders.fullName}',
                           style: GoogleFonts.roboto(
                             fontSize: 17,
                             letterSpacing: 1.5,
@@ -263,7 +278,8 @@ class OrderDetailScreen extends StatelessWidget {
                             color: Colors.black,
                           ),
                         ),
-                        Text('Order Id: ${orders.id}',
+                        Text(
+                          'Order Id: ${widget.orders.id}',
                           style: GoogleFonts.lato(
                             //fontSize: 17,
                             letterSpacing: 1.5,
@@ -271,30 +287,90 @@ class OrderDetailScreen extends StatelessWidget {
                             color: Colors.black,
                           ),
                         ),
-                        
                       ],
                     ),
                   ),
-                  orders.delivered == true ? 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: ElevatedButton(onPressed: (){}, child: Text('Leave a Review',style: GoogleFonts.montserrat(
+                  widget.orders.delivered == true
+                      ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('Leave a Review'),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      TextFormField(
+                                        controller: _reviewController,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: 'Your Review',
+                                        ),
+                                      ),
+                                      RatingBar(
+                                        filledIcon: Icons.star,
+                                        emptyIcon: Icons.star_border,
+                                        onRatingChanged:
+                                            (value){
+                                              rating = value;
+                                            },
+                                            // => debugPrint('$value'),
+                                        initialRating: 3,
+                                        maxRating: 5,
+                                      ),
+                                    ],
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Text('Submit'),
+                                      onPressed: () {
+                                        final review = _reviewController.text;
+                                        _productReviewController.uploadReview(
+                                          buyerId: widget.orders.buyerId,
+                                          email: widget.orders.email,
+                                          fullName: widget.orders.fullName,
+                                          productId: widget.orders.id,
+                                          rating: rating,
+                                          review: review,
+                                          context: context,
+                                        );
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Text(
+                            'Leave a Review',
+                            style: GoogleFonts.montserrat(
                               //fontSize: 17,
                               letterSpacing: 1.5,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
-                            ),)),
-                  ) :
-                  // orders.processing == true ?
-                  // ElevatedButton(onPressed: (){}, child: Text('Cancel Order',style: GoogleFonts.lato(
-                  //           fontSize: 17,
-                  //           letterSpacing: 1.5,
-                  //           fontWeight: FontWeight.bold,
-                  //           color: Colors.black,
-                  //         ),)):
-                  SizedBox(
-
-                  )
+                            ),
+                          ),
+                        ),
+                      )
+                      :
+                      // orders.processing == true ?
+                      // ElevatedButton(onPressed: (){}, child: Text('Cancel Order',style: GoogleFonts.lato(
+                      //           fontSize: 17,
+                      //           letterSpacing: 1.5,
+                      //           fontWeight: FontWeight.bold,
+                      //           color: Colors.black,
+                      //         ),)):
+                      SizedBox(),
                 ],
               ),
             ),

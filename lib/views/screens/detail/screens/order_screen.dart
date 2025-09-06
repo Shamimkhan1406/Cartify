@@ -38,6 +38,17 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
     }
   }
 
+  Future<void> _deleteOrder(String id) async {
+    final OrderController orderController = OrderController();
+    try {
+      await orderController.deleteOrder(id: id, context: context);
+      // refresh the list after deleting the order
+      fetchOrders();
+    } catch (e) {
+      print('Error deleting order: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final orders = ref.watch(orderProvider);
@@ -117,7 +128,13 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                     padding: const EdgeInsets.all(25.0),
                     child: InkWell(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> OrderDetailScreen(orders: order,)));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => OrderDetailScreen(orders: order),
+                          ),
+                        );
                       },
                       child: Container(
                         width: 335,
@@ -192,7 +209,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                                       Positioned(
                                         left: 101,
                                         top: 14,
-                      
+
                                         child: SizedBox(
                                           width: 216,
                                           child: Row(
@@ -230,7 +247,8 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                                                       SizedBox(height: 5),
                                                       Align(
                                                         alignment:
-                                                            Alignment.centerLeft,
+                                                            Alignment
+                                                                .centerLeft,
                                                         child: Text(
                                                           order.category,
                                                           style:
@@ -247,8 +265,9 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                                                       SizedBox(height: 5),
                                                       Align(
                                                         alignment:
-                                                            Alignment.centerLeft,
-                      
+                                                            Alignment
+                                                                .centerLeft,
+
                                                         child: Text(
                                                           'Quantity: ${order.quantity}',
                                                           style:
@@ -269,11 +288,13 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                                                             GoogleFonts.montserrat(
                                                               fontSize: 14,
                                                               fontWeight:
-                                                                  FontWeight.bold,
+                                                                  FontWeight
+                                                                      .bold,
                                                               height: 1.1,
-                                                              color: const Color(
-                                                                0xff4caf50,
-                                                              ),
+                                                              color:
+                                                                  const Color(
+                                                                    0xff4caf50,
+                                                                  ),
                                                             ),
                                                       ),
                                                     ],
@@ -328,10 +349,15 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                                       Positioned(
                                         top: 115,
                                         left: 298,
-                                        child: Image.asset(
-                                          'assets/icons/delete.png',
-                                          width: 20,
-                                          height: 20,
+                                        child: InkWell(
+                                          onTap: () {
+                                            _deleteOrder(order.id);
+                                          },
+                                          child: Image.asset(
+                                            'assets/icons/delete.png',
+                                            width: 20,
+                                            height: 20,
+                                          ),
                                         ),
                                       ),
                                     ],
