@@ -73,6 +73,22 @@ class ProductItemWidget extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
+            product.avgRating == 0 ? const SizedBox() : Row(
+              children: [
+                Icon(
+                  Icons.star,
+                  size: 16,
+                  color: Colors.amber,
+                ),
+                Text(
+                  product.avgRating.toStringAsFixed(1),
+                  style: GoogleFonts.roboto(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
             SizedBox(height: 1),
             Text(
               product.category,
