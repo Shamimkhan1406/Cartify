@@ -125,6 +125,24 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
               style: GoogleFonts.roboto(color: Colors.grey, fontSize: 16),
             ),
           ),
+          widget.product.totalRating == 0
+              ? Text('')
+              : Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.star, color: Colors.amber, size: 20),
+                    SizedBox(width: 4),
+                    Text(
+                      '${widget.product.avgRating} (${widget.product.totalRating} reviews)',
+                      style: GoogleFonts.roboto(
+                        //color: Colors.grey,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -151,21 +169,27 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
       bottomSheet: Padding(
         padding: EdgeInsets.all(8),
         child: InkWell(
-          onTap: isInCart ? null : () {
-            cartProviderData.addProductToCart(
-              productName: widget.product.productName,
-              productPrice: widget.product.productPrice,
-              category: widget.product.category,
-              images: widget.product.images,
-              vendorId: widget.product.vendorId,
-              productQuantity: widget.product.quantity,
-              quantity: 1,
-              productId: widget.product.id,
-              description: widget.product.description,
-              fullName: widget.product.fullName,
-            );
-            showSnackBar(context, '${widget.product.productName} added to cart');
-          },
+          onTap:
+              isInCart
+                  ? null
+                  : () {
+                    cartProviderData.addProductToCart(
+                      productName: widget.product.productName,
+                      productPrice: widget.product.productPrice,
+                      category: widget.product.category,
+                      images: widget.product.images,
+                      vendorId: widget.product.vendorId,
+                      productQuantity: widget.product.quantity,
+                      quantity: 1,
+                      productId: widget.product.id,
+                      description: widget.product.description,
+                      fullName: widget.product.fullName,
+                    );
+                    showSnackBar(
+                      context,
+                      '${widget.product.productName} added to cart',
+                    );
+                  },
           child: Container(
             width: 386,
             height: 46,
