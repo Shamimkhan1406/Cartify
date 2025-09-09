@@ -18,7 +18,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   final ProductReviewController _productReviewController =
       ProductReviewController();
 
-  double rating = 0.0;
+  double rating = 3.0;
 
   @override
   Widget build(BuildContext context) {

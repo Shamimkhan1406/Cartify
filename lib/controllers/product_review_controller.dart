@@ -25,12 +25,16 @@ class ProductReviewController {
         rating: rating,
         review: review,
       );
+      print('Request body: ${productReview.toJson()}'); // <-- Put it here
+
       http.Response response = await http.post(Uri.parse('$uri/api/product-review'),
         body: productReview.toJson(),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
+      print('Response status: ${response.statusCode}'); // <-- And here
+      print('Response body: ${response.body}'); // <-- And here
       manageHttpResponse(response: response, context: context, onSuccess: (){
         showSnackBar(context, 'Review uploaded successfully');
       });

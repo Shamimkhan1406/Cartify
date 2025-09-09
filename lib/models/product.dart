@@ -51,7 +51,9 @@ class Product {
     return Product(
       id: map['_id'] as String,
       productName: map['productName'] as String,
-      productPrice: map['productPrice'] as double,
+      productPrice: map['productPrice'] is int
+          ? map['productPrice'].toDouble()
+          : map['productPrice'] as double,
       quantity: map['quantity'] as int,
       description: map['description'] as String,
       category: map['category'] as String,
