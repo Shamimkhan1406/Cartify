@@ -20,6 +20,7 @@ void manageHttpResponse({
       showSnackBar(context, jsonDecode(response.body)['error']);// show a snackBar with the error message
       break;
     case 201: // status code 201 means a resource was created successfully
+      showSnackBar(context, jsonDecode(response.body)['msg']); // show a snackBar with the success message
       onSuccess(); // call the onSuccess function
       break;
     default:

@@ -338,12 +338,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                           buyerId: widget.orders.buyerId,
                                           email: widget.orders.email,
                                           fullName: widget.orders.fullName,
-                                          productId: widget.orders.id,
+                                          productId: widget.orders.productId,
                                           rating: rating,
                                           review: review,
                                           context: context,
                                         );
-                                        Navigator.of(context).pop();
+                                        //Navigator.of(context).pop();
                                       },
                                     ),
                                   ],

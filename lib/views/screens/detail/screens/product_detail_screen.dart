@@ -134,7 +134,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                     Icon(Icons.star, color: Colors.amber, size: 20),
                     SizedBox(width: 4),
                     Text(
-                      '${widget.product.avgRating} (${widget.product.totalRating} reviews)',
+                      '${widget.product.avgRating.toStringAsFixed(2)} (${widget.product.totalRating} reviews)',
                       style: GoogleFonts.roboto(
                         //color: Colors.grey,
                         fontSize: 14,

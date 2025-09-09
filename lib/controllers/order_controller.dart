@@ -10,6 +10,7 @@ class OrderController {
   // function to upload order
   Future<void> uploadOrder({
   required String id,
+  required String productId,
   required String fullName,
   required String email,
   required String state,
@@ -29,6 +30,7 @@ class OrderController {
     try {
       final Order order = Order(
         id: id,
+        productId: productId,
         fullName: fullName,
         email: email,
         state: state,

@@ -418,17 +418,18 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                         var item = entry.value;
                         _orderController.uploadOrder(
                           id: '',
+                          productId: item.productId,
                           fullName: ref.read(userProvider)!.fullName,
                           email: ref.read(userProvider)!.email,
-                          state:
-                              "west bengal", // You can replace this with actual state
-                          city:
-                              "kolkata", // You can replace this with actual city
-                          locality:
-                              "sector 5", // You can replace this with actual locality
-                          //state: ref.read(userProvider)!.state,
-                          //city: ref.read(userProvider)!.city,
-                          //locality: ref.read(userProvider)!.locality,
+                          // state:
+                          //     "west bengal", // You can replace this with actual state
+                          // city:
+                          //     "kolkata", // You can replace this with actual city
+                          // locality:
+                          //     "sector 5", // You can replace this with actual locality
+                          state: ref.read(userProvider)!.state,
+                          city: ref.read(userProvider)!.city,
+                          locality: ref.read(userProvider)!.locality,
                           productName: item.productName,
                           productPrice: item.productPrice,
                           quantity: item.quantity,
