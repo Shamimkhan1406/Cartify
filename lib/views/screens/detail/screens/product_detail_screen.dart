@@ -1,5 +1,6 @@
 import 'package:cartify/models/product.dart';
 import 'package:cartify/provider/cart_provider.dart';
+import 'package:cartify/provider/favorite_provider.dart';
 import 'package:cartify/services/manage_http_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +18,7 @@ class ProductDetailScreen extends ConsumerStatefulWidget {
 class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
+    final favoriteProviderData = ref.read(favoriteProvider.notifier);
     final cartProviderData = ref.read(cartProvider.notifier);
     final cartData = ref.watch(cartProvider);
     final isInCart = cartData.containsKey(widget.product.id);
@@ -32,7 +34,26 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            IconButton(onPressed: () {}, icon: Icon(Icons.favorite_border)),
+            IconButton(
+              onPressed: () {
+                favoriteProviderData.addFavorite(
+                  productName: widget.product.productName,
+                  productPrice: widget.product.productPrice,
+                  category: widget.product.category,
+                  images: widget.product.images,
+                  vendorId: widget.product.vendorId,
+                  productQuantity: widget.product.quantity,
+                  quantity: 1,
+                  productId: widget.product.id,
+                  description: widget.product.description,
+                  fullName: widget.product.fullName,
+                );
+                showSnackBar(context, 'added ${widget.product.productName} to favorites');
+              },
+              icon: favoriteProviderData.getFavoriteItems.containsKey(widget.product.id)
+                  ? Icon(Icons.favorite, color: Colors.red)
+                  : Icon(Icons.favorite_border, color: Colors.red),
+            ),
           ],
         ),
         centerTitle: true,
