@@ -39,5 +39,9 @@ class FavoriteNotifier extends StateNotifier<Map<String, Favorite>> {
   }
 
   // getter to retrieve the current Favorite items
-  Map<String, Favorite> get getCartItems => state;
+  Map<String, Favorite> get getFavoriteItems => state;
 }
+// define a state notifier provider to expose an instance of FavoriteNotifier 
+final favoriteProvider = StateNotifierProvider<FavoriteNotifier, Map<String, Favorite>>((ref) {
+  return FavoriteNotifier();
+});
