@@ -1,10 +1,43 @@
+import 'dart:convert';
+
 import 'package:cartify/models/cart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // a notifier class to manage the cart state extending StateNotifier
 // with an initial empty map of cart items
 class CartNotifier extends StateNotifier<Map<String, Cart>> {
-  CartNotifier() : super({});
+  CartNotifier() : super({}){
+    _loadCartItems();
+  }
+
+  // a private methode that loads items from shared pefference
+  Future<void> _loadCartItems() async {
+    // retrive the shared preferences instance
+    final pref = await SharedPreferences.getInstance();
+    // get the list of json strings from shared preferences
+    final cartListString = pref.getString('cart_items');
+    if (cartListString != null) {
+      // decode the json string to a list of maps
+      final Map<String, dynamic> cartList = jsonDecode(cartListString);
+      // convert the dynamic map into a map of favorites object using the from json factory mathod
+      final cartItems = cartList.map((key,value)=>MapEntry(key, Cart.fromJson(value)));
+      // updating the state with loaded data
+      state = cartItems;
+
+    }
+  }
+
+  // a private method that saves the current list of cart items to shared preferences
+  Future <void> _saveCartItems() async {
+    //retrive the shared preferences instance
+    final pref = await SharedPreferences.getInstance();
+    // convert the current state of cart items to a list of json strings
+    final cartList = jsonEncode(state);
+    // save the list of json strings to shared preferences
+    await pref.setString('cart_items', cartList);
+  }
+
   // method to add product to cart
   void addProductToCart({
     required String productName,
@@ -37,6 +70,7 @@ class CartNotifier extends StateNotifier<Map<String, Cart>> {
           
         ),
       };
+      _saveCartItems();
     }
     else{
       // if it doesn't exist, add it with the provided details
@@ -55,6 +89,7 @@ class CartNotifier extends StateNotifier<Map<String, Cart>> {
           fullName: fullName,
         ),
       };
+      _saveCartItems();
     }
   }
   // method to increment the quantity of a product in the cart
@@ -63,6 +98,7 @@ class CartNotifier extends StateNotifier<Map<String, Cart>> {
       state[productId]!.quantity++;
       // notify listeners about the state change
       state = {...state};
+      _saveCartItems();
     }
   }
   // method to decrement the quantity of a product in the cart
@@ -78,6 +114,7 @@ class CartNotifier extends StateNotifier<Map<String, Cart>> {
       }
       // notify listeners about the state change
       state = {...state};
+      _saveCartItems();
     }
   }
   // method to remove a product from the cart
@@ -85,6 +122,7 @@ class CartNotifier extends StateNotifier<Map<String, Cart>> {
     state.remove(productId);
     // notify listeners about the state change
     state = {...state};
+    _saveCartItems();
   }
   // method to calculate the total price of items in the cart
   double calculateTotalAmount(){
