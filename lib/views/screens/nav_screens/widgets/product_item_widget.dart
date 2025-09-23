@@ -1,21 +1,31 @@
 import 'package:cartify/models/product.dart';
+import 'package:cartify/provider/favorite_provider.dart';
+import 'package:cartify/services/manage_http_response.dart';
 import 'package:cartify/views/screens/detail/screens/product_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ProductItemWidget extends StatelessWidget {
+class ProductItemWidget extends ConsumerStatefulWidget {
   final Product product;
 
   const ProductItemWidget({super.key, required this.product});
 
   @override
+  ConsumerState<ProductItemWidget> createState() => _ProductItemWidgetState();
+}
+
+class _ProductItemWidgetState extends ConsumerState<ProductItemWidget> {
+  @override
   Widget build(BuildContext context) {
+    final favoriteProviderData = ref.read(favoriteProvider.notifier);
+    ref.watch(favoriteProvider);
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProductDetailScreen(product: product),
+            builder: (context) => ProductDetailScreen(product: widget.product),
           ),
         );
       },
@@ -37,7 +47,7 @@ class ProductItemWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(24),
                     ),
                     child: Image.network(
-                      product.images[0],
+                      widget.product.images[0],
                       height: 170,
                       width: 170,
                       fit: BoxFit.cover,
@@ -45,11 +55,32 @@ class ProductItemWidget extends StatelessWidget {
                   ),
                   Positioned(
                     right: 4,
-                    top: 15,
-                    child: Image.asset(
-                      'assets/icons/love.png',
-                      width: 26,
-                      height: 26,
+                    top: 5,
+                    child: InkWell(
+                      onTap: () {
+                        favoriteProviderData.addFavorite(
+                          productName: widget.product.productName,
+                          productPrice: widget.product.productPrice,
+                          category: widget.product.category,
+                          images: widget.product.images,
+                          vendorId: widget.product.vendorId,
+                          productQuantity: widget.product.quantity,
+                          quantity: 1,
+                          productId: widget.product.id,
+                          description: widget.product.description,
+                          fullName: widget.product.fullName,
+                        );
+                        showSnackBar(
+                          context,
+                          'added ${widget.product.productName} to favorites',
+                        );
+                      },
+                      child:
+                          favoriteProviderData.getFavoriteItems.containsKey(
+                                widget.product.id,
+                              )
+                              ? Icon(Icons.favorite, color: Colors.red)
+                              : Icon(Icons.favorite_border, color: Colors.grey),
                     ),
                   ),
                   Positioned(
@@ -66,32 +97,30 @@ class ProductItemWidget extends StatelessWidget {
             ),
             SizedBox(height: 2),
             Text(
-              product.productName,
+              widget.product.productName,
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.roboto(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            product.avgRating == 0 ? const SizedBox() : Row(
-              children: [
-                Icon(
-                  Icons.star,
-                  size: 16,
-                  color: Colors.amber,
+            widget.product.avgRating == 0
+                ? const SizedBox()
+                : Row(
+                  children: [
+                    Icon(Icons.star, size: 16, color: Colors.amber),
+                    Text(
+                      widget.product.avgRating.toStringAsFixed(1),
+                      style: GoogleFonts.roboto(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  product.avgRating.toStringAsFixed(1),
-                  style: GoogleFonts.roboto(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
             SizedBox(height: 1),
             Text(
-              product.category,
+              widget.product.category,
               style: GoogleFonts.quicksand(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
@@ -100,7 +129,7 @@ class ProductItemWidget extends StatelessWidget {
             ),
             SizedBox(height: 1),
             Text(
-              '₹${product.productPrice.toStringAsFixed(2)}',
+              '₹${widget.product.productPrice.toStringAsFixed(2)}',
               style: GoogleFonts.roboto(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
