@@ -5,7 +5,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FavoriteNotifier extends StateNotifier<Map<String, Favorite>> {
-  FavoriteNotifier() : super({});
+  FavoriteNotifier() : super({}){
+    _loadFavorites();
+  }
+  // a private methode that loads items from shared pefference
+  Future<void> _loadFavorites() async {
+    // retrive the shared preferences instance
+    final pref = await SharedPreferences.getInstance();
+    // get the list of json strings from shared preferences
+    final favoriteListString = pref.getString('favorite');
+    if (favoriteListString != null) {
+      // decode the json string to a list of maps
+      final Map<String, dynamic> favoriteList = jsonDecode(favoriteListString);
+      // convert the dynamic map into a map of favorites object using the from json factory mathod
+      final favorites = favoriteList.map((key,value)=>MapEntry(key, Favorite.fromJson(value)));
+      // updating the state with loaded data
+      state = favorites;
+
+    }
+  }
 
   // a private method that saves the current list of favorite items to shared preferences
   Future <void> _saveFavorites() async {
