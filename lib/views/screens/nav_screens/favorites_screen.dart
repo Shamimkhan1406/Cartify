@@ -1,4 +1,5 @@
 import 'package:cartify/provider/favorite_provider.dart';
+import 'package:cartify/views/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +15,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
     final wishItemData = ref.watch(favoriteProvider);
+    final wishlistProvider = ref.read(favoriteProvider.notifier);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(
@@ -79,111 +81,158 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
           ),
         ),
       ),
-      body: ListView.builder(
-        itemCount: wishItemData.length,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          final wishItem = wishItemData.values.toList()[index];
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Container(
-                width: 335,
-                height: 96,
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                  // color: const Color.fromARGB(255, 255, 250, 201),
-                  // borderRadius: BorderRadius.circular(14),
+      body:
+          wishItemData.isEmpty
+              ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Your Wishlist is empty',
+                      style: GoogleFonts.quicksand(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MainScreen()),
+                        );
+                      },
+                      child: Text(
+                        'Shop Now',
+                        style: GoogleFonts.quicksand(fontSize: 16),
+                      ),
+                    ),
+                  ],
                 ),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Positioned(
-                        left: 0,
-                        top: 0,
-                        child: Container(
-                          width: 335,
-                          height: 96,
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 255, 250, 201),
-                            border: Border.all(
-                              color: const Color(0xffe0e0e0),
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.circular(14),
-                          ),
+              )
+              : ListView.builder(
+                itemCount: wishItemData.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  final wishItem = wishItemData.values.toList()[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Container(
+                        width: 335,
+                        height: 96,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          // color: const Color.fromARGB(255, 255, 250, 201),
+                          // borderRadius: BorderRadius.circular(14),
                         ),
-                      ),
-                      Positioned(
-                        left: 13,
-                        top: 9,
-                        child: Container(
-                          width: 78,
-                          height: 78,
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: const Color.fromARGB(255, 246, 215, 251),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 265,
-                        top: 16,
-                        child: Text(
-                          '₹${wishItem.productPrice.toStringAsFixed(2)}',
-                          style: GoogleFonts.montserrat(
-                            color: const Color(0xff212121),
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 101,
-                        top: 14,
                         child: SizedBox(
-                          width: 162,
-                          child: Text(
-                            wishItem.productName,
-                            style: GoogleFonts.montserrat(
-                              color: const Color(0xff212121),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
+                          width: double.infinity,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Positioned(
+                                left: 0,
+                                top: 0,
+                                child: Container(
+                                  width: 335,
+                                  height: 96,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                    color: const Color.fromARGB(
+                                      255,
+                                      255,
+                                      250,
+                                      201,
+                                    ),
+                                    border: Border.all(
+                                      color: const Color(0xffe0e0e0),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: 13,
+                                top: 9,
+                                child: Container(
+                                  width: 78,
+                                  height: 78,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: const Color.fromARGB(
+                                      255,
+                                      246,
+                                      215,
+                                      251,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: 265,
+                                top: 16,
+                                child: Text(
+                                  '₹${wishItem.productPrice.toStringAsFixed(2)}',
+                                  style: GoogleFonts.montserrat(
+                                    color: const Color(0xff212121),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: 101,
+                                top: 14,
+                                child: SizedBox(
+                                  width: 162,
+                                  child: Text(
+                                    wishItem.productName,
+                                    style: GoogleFonts.montserrat(
+                                      color: const Color(0xff212121),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: 23,
+                                top: 14,
+                                child: Image.network(
+                                  wishItem.images[0],
+                                  width: 56,
+                                  height: 67,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Positioned(
+                                left: 284,
+                                top: 47,
+                                child: InkWell(
+                                  onTap: () {
+                                    wishlistProvider.removeFavoriteItem(
+                                      wishItem.productId,
+                                    );
+                                  },
+                                  child: Image.asset(
+                                    "assets/icons/delete.png",
+                                    width: 24,
+                                    height: 24,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      Positioned(
-                        left: 23,
-                        top: 14,
-                        child: Image.network(
-                          wishItem.images[0],
-                          width: 56,
-                          height: 67,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Positioned(
-                        left: 284,
-                        top: 47,
-                        child: Image.asset(
-                          "assets/icons/delete.png",
-                          width: 24,
-                          height: 24,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               ),
-            ),
-          );
-        },
-      ),
     );
   }
 }
