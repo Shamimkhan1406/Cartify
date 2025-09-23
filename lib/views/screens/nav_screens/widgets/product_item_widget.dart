@@ -1,4 +1,5 @@
 import 'package:cartify/models/product.dart';
+import 'package:cartify/provider/cart_provider.dart';
 import 'package:cartify/provider/favorite_provider.dart';
 import 'package:cartify/services/manage_http_response.dart';
 import 'package:cartify/views/screens/detail/screens/product_detail_screen.dart';
@@ -18,6 +19,9 @@ class ProductItemWidget extends ConsumerStatefulWidget {
 class _ProductItemWidgetState extends ConsumerState<ProductItemWidget> {
   @override
   Widget build(BuildContext context) {
+    final cartProviderData = ref.read(cartProvider.notifier);
+    final cartData = ref.watch(cartProvider);
+    final isInCart = cartData.containsKey(widget.product.id);
     final favoriteProviderData = ref.read(favoriteProvider.notifier);
     ref.watch(favoriteProvider);
     return InkWell(
@@ -86,10 +90,33 @@ class _ProductItemWidgetState extends ConsumerState<ProductItemWidget> {
                   Positioned(
                     bottom: 4,
                     right: 4,
-                    child: Image.asset(
-                      'assets/icons/cart.png',
-                      width: 26,
-                      height: 26,
+                    child: InkWell(
+                      onTap:
+              isInCart
+                  ? null
+                  : () {
+                    cartProviderData.addProductToCart(
+                      productName: widget.product.productName,
+                      productPrice: widget.product.productPrice,
+                      category: widget.product.category,
+                      images: widget.product.images,
+                      vendorId: widget.product.vendorId,
+                      productQuantity: widget.product.quantity,
+                      quantity: 1,
+                      productId: widget.product.id,
+                      description: widget.product.description,
+                      fullName: widget.product.fullName,
+                    );
+                    showSnackBar(
+                      context,
+                      '${widget.product.productName} added to cart',
+                    );
+                  },
+                      child: Image.asset(
+                        'assets/icons/cart.png',
+                        width: 26,
+                        height: 26,
+                      ),
                     ),
                   ),
                 ],
