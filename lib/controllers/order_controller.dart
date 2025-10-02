@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cartify/models/order.dart';
 import 'package:cartify/services/manage_http_response.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../global_variables.dart';
 
 
@@ -28,6 +29,8 @@ class OrderController {
   required context,
   }) async {
     try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('auth-token');
       final Order order = Order(
         id: id,
         productId: productId,
@@ -50,6 +53,7 @@ class OrderController {
       body: order.toJson(),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'x-auth-token': token!,
       },
       );
       manageHttpResponse(response: response, context: context, onSuccess: (){
