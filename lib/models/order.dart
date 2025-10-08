@@ -45,27 +45,25 @@ class Order {
   String toJson() => json.encode(toMap());
 
   factory Order.fromJson(Map<String, dynamic> map) {
-    return Order(
-      id: map['_id'] as String,
-      productId: map['productId'] as String,
-      fullName: map['fullName'] as String,
-      email: map['email'] as String,
-      state: map['state'] as String,
-      city: map['city'] as String,
-      locality: map['locality'] as String,
-      productName: map['productName'] as String,
-      productPrice: map['productPrice'] is int
-          ? map['productPrice'].toDouble()
-          : map['productPrice'] as double,
-      quantity: map['quantity'] as int,
-      category: map['category'] as String,
-      image: map['image'] as String,
-      buyerId: map['buyerId'] as String,
-      vendorId: map['vendorId'] as String,
-      processing: map['processing'] as bool,
-      delivered: map['delivered'] as bool,
-    );
-  }
+  return Order(
+    id: map['_id'] as String? ?? '',
+    productId: map['productId'] as String? ?? '',
+    fullName: map['fullName'] as String? ?? '',
+    email: map['email'] as String? ?? '',
+    state: map['state'] as String? ?? '',
+    city: map['city'] as String? ?? '',
+    locality: map['locality'] as String? ?? '',
+    productName: map['productName'] as String? ?? '',
+    productPrice: (map['productPrice'] as num?)?.toDouble() ?? 0.0,
+    quantity: map['quantity'] as int? ?? 0,
+    category: map['category'] as String? ?? '',
+    image: map['image'] as String? ?? '',
+    buyerId: map['buyerId'] as String? ?? '',
+    vendorId: map['vendorId'] as String? ?? '',
+    processing: map['processing'] as bool? ?? false,
+    delivered: map['delivered'] as bool? ?? false,
+  );
+}
 
   
 

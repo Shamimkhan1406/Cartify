@@ -30,7 +30,12 @@ class OrderController {
   }) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('auth-token');
+      String? token = prefs.getString('auth_token');
+      if (token == null) {
+        print('auth_token is null. Cannot upload order.');
+        showSnackBar(context, 'Authentication error. Please log in again.');
+        return;
+      }
       final Order order = Order(
         id: id,
         productId: productId,
@@ -53,7 +58,7 @@ class OrderController {
       body: order.toJson(),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': token!,
+        'x-auth-token': token,
       },
       );
       manageHttpResponse(response: response, context: context, onSuccess: (){
@@ -67,10 +72,17 @@ class OrderController {
   // functions to get orders by buyer id
   Future<List<Order>> loadOrders({required String buyerId}) async{
     try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('auth_token');
+      if (token == null) {
+        print('auth_token is null. Cannot load orders.');
+        return [];
+      }
       // send http get request to the server
       http.Response response = await http.get(Uri.parse('$uri/api/orders/$buyerId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'x-auth-token': token,
       },
       );
     // check if the response is successful
@@ -93,9 +105,18 @@ class OrderController {
   // delete order by id
   Future<void> deleteOrder({required String id, required context}) async{
     try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('auth_token');
+      if (token == null) {
+        print('auth_token is null. Cannot delete order.');
+        showSnackBar(context, 'Authentication error. Please log in again.');
+        return;
+      }
+      
       http.Response response = await http.delete(Uri.parse('$uri/api/orders/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'x-auth-token': token,
       },
       );
       manageHttpResponse(response: response, context: context, onSuccess: (){
