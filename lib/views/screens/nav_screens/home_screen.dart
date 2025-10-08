@@ -3,6 +3,7 @@ import 'package:cartify/views/screens/nav_screens/widgets/category_item_widget.d
 import 'package:cartify/views/screens/nav_screens/widgets/header_widget.dart';
 import 'package:cartify/views/screens/nav_screens/widgets/popular_products_widget.dart';
 import 'package:cartify/views/screens/nav_screens/widgets/reusable_text_widget.dart';
+import 'package:cartify/views/screens/nav_screens/widgets/top_rated_product_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -19,6 +20,8 @@ class HomeScreen extends StatelessWidget {
             CategoryItemWidget(),
             ReusableTextWidget(title: 'Popular Products', subTitle: 'View All'),
             PopularProductsWidget(),
+            ReusableTextWidget(title: 'Top Rated Products', subTitle: 'View All'),
+            TopRatedProductWidget(),
           ],
         ),
       ),
