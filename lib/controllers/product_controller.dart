@@ -112,4 +112,31 @@ class ProductController {
       
     }
   }
+
+  // method to fetch top 10 highest rated products
+  Future<List<Product>> loadTopRatedProducts()async {
+    try {
+      http.Response response = await http.get(Uri.parse('$uri/api/top-rated-products'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      // check the http response status code
+      if (response.statusCode == 200) {
+        // decode the json response body into list of dynamic objects type
+        final List<dynamic> data = jsonDecode(response.body) as List<dynamic>;
+
+        // map the list of dynamic objects to a list of Product objects
+        List<Product> topRatedProduct = data.map((product)=> Product.fromMap(product as Map<String, dynamic>)).toList();
+        return topRatedProduct;
+      } else {
+        // if the response status code is not 200, throw an error
+        throw Exception('Failed to load top rated products');
+      }
+    } catch (e) {
+      // Handle error
+      throw Exception('Error loading top rated products: $e');
+      
+    }
+  }
 }

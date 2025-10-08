@@ -1,7 +1,11 @@
+import 'package:cartify/controllers/product_controller.dart';
 import 'package:cartify/models/product.dart';
 import 'package:cartify/provider/cart_provider.dart';
 import 'package:cartify/provider/favorite_provider.dart';
+import 'package:cartify/provider/related_product_provider.dart';
 import 'package:cartify/services/manage_http_response.dart';
+import 'package:cartify/views/screens/nav_screens/widgets/product_item_widget.dart';
+import 'package:cartify/views/screens/nav_screens/widgets/reusable_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,8 +20,23 @@ class ProductDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
+  void initState() {
+    super.initState();
+    //futurePopularProductsFuture = ProductController().loadPopularProducts();
+    _fetchProducts();
+  }
+  Future<void> _fetchProducts() async{
+      final ProductController productController = ProductController();
+      try {
+        final products = await productController.loadRelatedProductsBySubCategory(widget.product.id);
+        ref.read(relatedProductProvider.notifier).setProducts(products);
+      } catch (e) {
+        print('Error fetching products: $e');
+      }
+    }
   @override
   Widget build(BuildContext context) {
+    final relatedProduct = ref.watch(relatedProductProvider);
     final favoriteProviderData = ref.read(favoriteProvider.notifier);
     ref.watch(favoriteProvider);
     final cartProviderData = ref.read(cartProvider.notifier);
@@ -59,134 +78,149 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Container(
-              width: 260,
-              height: 274,
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Positioned(
-                    left: 0,
-                    top: 50,
-                    child: Container(
-                      width: 260,
-                      height: 260,
-                      clipBehavior: Clip.hardEdge,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 197, 236, 255),
-                        borderRadius: BorderRadius.circular(130),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 22,
-                    top: 0,
-                    child: Container(
-                      width: 216,
-                      height: 274,
-                      clipBehavior: Clip.hardEdge,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 255, 196, 216),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: SizedBox(
-                        height: 300,
-                        child: PageView.builder(
-                          itemCount: widget.product.images.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return Image.network(
-                              widget.product.images[index],
-                              width: 198,
-                              height: 225,
-                              fit: BoxFit.cover,
-                            );
-                          },
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 260,
+                height: 274,
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Positioned(
+                      left: 0,
+                      top: 50,
+                      child: Container(
+                        width: 260,
+                        height: 260,
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 197, 236, 255),
+                          borderRadius: BorderRadius.circular(130),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.product.productName,
-                  style: GoogleFonts.roboto(
-                    color: Colors.deepPurple,
-                    fontSize: 19,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  '\$${widget.product.productPrice}',
-                  style: GoogleFonts.roboto(
-                    color: Colors.deepPurple,
-                    fontSize: 19,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              widget.product.category,
-              style: GoogleFonts.roboto(color: Colors.grey, fontSize: 16),
-            ),
-          ),
-          widget.product.totalRating == 0
-              ? Text('')
-              : Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.star, color: Colors.amber, size: 20),
-                    SizedBox(width: 4),
-                    Text(
-                      '${widget.product.avgRating.toStringAsFixed(2)} (${widget.product.totalRating} reviews)',
-                      style: GoogleFonts.roboto(
-                        //color: Colors.grey,
-                        fontSize: 14,
+                    Positioned(
+                      left: 22,
+                      top: 0,
+                      child: Container(
+                        width: 216,
+                        height: 274,
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 255, 196, 216),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: SizedBox(
+                          height: 300,
+                          child: PageView.builder(
+                            itemCount: widget.product.images.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return Image.network(
+                                widget.product.images[index],
+                                width: 198,
+                                height: 225,
+                                fit: BoxFit.cover,
+                              );
+                            },
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'About',
-                  style: GoogleFonts.lato(
-                    color: Colors.blueGrey,
-                    fontSize: 17,
-                    letterSpacing: 1.7,
-                    fontWeight: FontWeight.bold,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.product.productName,
+                    style: GoogleFonts.roboto(
+                      color: Colors.deepPurple,
+                      fontSize: 19,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '\$${widget.product.productPrice}',
+                    style: GoogleFonts.roboto(
+                      color: Colors.deepPurple,
+                      fontSize: 19,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                widget.product.category,
+                style: GoogleFonts.roboto(color: Colors.grey, fontSize: 16),
+              ),
+            ),
+            widget.product.totalRating == 0
+                ? Text('')
+                : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Icon(Icons.star, color: Colors.amber, size: 20),
+                      SizedBox(width: 4),
+                      Text(
+                        '${widget.product.avgRating.toStringAsFixed(2)} (${widget.product.totalRating} reviews)',
+                        style: GoogleFonts.roboto(
+                          //color: Colors.grey,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Text(
-                  widget.product.description,
-                  style: GoogleFonts.lato(letterSpacing: 1.5),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'About',
+                    style: GoogleFonts.lato(
+                      color: Colors.blueGrey,
+                      fontSize: 17,
+                      letterSpacing: 1.7,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    widget.product.description,
+                    style: GoogleFonts.lato(letterSpacing: 1.5),
+                  ),
+                ],
+              ),
+            ),
+            ReusableTextWidget(title: 'Related Products', subTitle: ''),
+            SizedBox(
+            height: 250,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: relatedProduct.length,
+              itemBuilder: (context, index) {
+                final product = relatedProduct[index];
+                return ProductItemWidget(product: product,);
+              },
             ),
           ),
-        ],
+          SizedBox(height: 80),
+          ],
+        ),
       ),
       bottomSheet: Padding(
         padding: EdgeInsets.all(8),
