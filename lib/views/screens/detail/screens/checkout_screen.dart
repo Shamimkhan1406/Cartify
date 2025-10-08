@@ -1,7 +1,9 @@
 import 'package:cartify/controllers/order_controller.dart';
 import 'package:cartify/provider/cart_provider.dart';
 import 'package:cartify/provider/user_provider.dart';
+import 'package:cartify/services/manage_http_response.dart';
 import 'package:cartify/views/screens/detail/screens/shipping_address_screen.dart';
+import 'package:cartify/views/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -441,6 +443,10 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                           delivered: false,
                           context: context,
                         );
+                      }).then((value){
+                        _cartProvider.clearCart();
+                        //showSnackBar(context, 'Order placed successfully');
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> MainScreen()));
                       });
                     }
                   },
