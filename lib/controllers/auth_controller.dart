@@ -12,12 +12,12 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-final providerContainer = ProviderContainer();
+//final providerContainer = ProviderContainer();
 
 class AuthController {
   // sign up user
   Future<void> signUpUser({
-    required context,
+    required BuildContext context,
     required String fullName,
     required String email,
     required String password,
@@ -63,9 +63,10 @@ class AuthController {
 
   // sign in user
   Future<void> signInUser({
-    required context,
+    required BuildContext context,
     required String email,
     required String password,
+    required WidgetRef ref,
   }) async {
     try {
       http.Response response = await http.post(
@@ -91,7 +92,7 @@ class AuthController {
           // encode the user data received from the backend as json
           final userJson = jsonEncode(jsonDecode(response.body)['user']);
           // update the app state with the user data using reverpod
-          providerContainer.read(userProvider.notifier).setUser(userJson);
+          ref.read(userProvider.notifier).setUser(userJson);
           // store the user data in shared preferences for future use
           await preferences.setString("user", userJson);
 
@@ -112,7 +113,7 @@ class AuthController {
   }
 
   // sign out user
-  Future<void> signOutUser({required context}) async {
+  Future<void> signOutUser({required BuildContext context,required WidgetRef ref,}) async {
     try {
       // access shared prefferences to save the token and user data storage
       SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -121,8 +122,8 @@ class AuthController {
       // remove the user data from shared preferences
       await preferences.remove("user");
       // clear the app state with the user data using reverpod
-      providerContainer.read(userProvider.notifier).signOut();
-      providerContainer.read(deliveredOrderCountProvider.notifier).resetDeliveredOrderCount();
+      ref.read(userProvider.notifier).signOut();
+      ref.read(deliveredOrderCountProvider.notifier).resetDeliveredOrderCount();
       // navigate to the login screen
       Navigator.pushAndRemoveUntil(
         context,
@@ -139,11 +140,12 @@ class AuthController {
 
   // update user's state city and locality
   Future<void> updateUserLocation({
-    required context,
+    required BuildContext context,
     required String id,
     required String state,
     required String city,
     required String locality,
+    required WidgetRef ref,
   }) async{
     try {
       // make a PUT request to update the user location
@@ -170,7 +172,7 @@ class AuthController {
         final userJson = jsonEncode(updatedUser);
         // update the app state with the updated user data using reverpod
         // this is to ensure that the user data is updated in the app state
-        providerContainer.read(userProvider.notifier).setUser(userJson);
+        ref.read(userProvider.notifier).setUser(userJson);
         // store the updated user data in shared preferences for future use
         // this allows the app to retrieve the updated user data even after the app is restarted
         await preferences.setString("user", userJson);

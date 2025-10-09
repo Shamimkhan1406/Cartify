@@ -23,7 +23,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget build(BuildContext context) {
     final buyerId = ref.read(userProvider)!.id;
     // fetch the delivered order count when the widget is built
-    ref.read(deliveredOrderCountProvider.notifier).fetchDeliveredOrderCount(buyerId, context);
+    ref
+        .read(deliveredOrderCountProvider.notifier)
+        .fetchDeliveredOrderCount(buyerId, context);
     // watch the delivered order count to reactivly update the UI
     final deliveredOrderCount = ref.watch(deliveredOrderCountProvider);
     final user = ref.read(userProvider);
@@ -88,21 +90,24 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                   Align(
                     alignment: Alignment(0, 0.03),
-                    child: user!.fullName != "" ? Text(
-                      user.fullName,
-                      style: GoogleFonts.montserrat(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                      ),
-                    ) : Text(
-                      'User',
-                      style: GoogleFonts.montserrat(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                      ),
-                    ),
+                    child:
+                        user!.fullName != ""
+                            ? Text(
+                              user.fullName,
+                              style: GoogleFonts.montserrat(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22,
+                              ),
+                            )
+                            : Text(
+                              'User',
+                              style: GoogleFonts.montserrat(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22,
+                              ),
+                            ),
                   ),
                   Align(
                     alignment: Alignment(0.05, 0.17),
@@ -115,19 +120,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           ),
                         );
                       },
-                      child: user.state != "" ? Text(
-                        user.state,
-                        style: GoogleFonts.montserrat(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ) :Text(
-                        'State',
-                        style: GoogleFonts.montserrat(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      child:
+                          user.state != ""
+                              ? Text(
+                                user.state,
+                                style: GoogleFonts.montserrat(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )
+                              : Text(
+                                'State',
+                                style: GoogleFonts.montserrat(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                     ),
                   ),
                   Align(
@@ -312,67 +320,57 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
             ListTile(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const OrderScreen();
-                }));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const OrderScreen();
+                    },
+                  ),
+                );
               },
-              leading: Image.asset(
-                'assets/icons/orders.png',
-              ),
+              leading: Image.asset('assets/icons/orders.png'),
               title: Text(
                 'Track your order',
-                style: GoogleFonts.montserrat(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: GoogleFonts.montserrat(fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             ListTile(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const OrderScreen();
-                }));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const OrderScreen();
+                    },
+                  ),
+                );
               },
-              leading: Image.asset(
-                'assets/icons/history.png',
-              ),
+              leading: Image.asset('assets/icons/history.png'),
               title: Text(
                 'History',
-                style: GoogleFonts.montserrat(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: GoogleFonts.montserrat(fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             ListTile(
               onTap: () {},
-              leading: Image.asset(
-                'assets/icons/help.png',
-              ),
+              leading: Image.asset('assets/icons/help.png'),
               title: Text(
                 'Help',
-                style: GoogleFonts.montserrat(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: GoogleFonts.montserrat(fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             ListTile(
-              onTap: () {},
-              leading: Image.asset(
-                'assets/icons/logout.png',
-              ),
+              onTap: () async {
+                await authController.signOutUser(context: context, ref: ref,);
+              },
+              leading: Image.asset('assets/icons/logout.png'),
               title: Text(
                 'Logout',
-                style: GoogleFonts.montserrat(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: GoogleFonts.montserrat(fontWeight: FontWeight.bold),
               ),
             ),
           ],

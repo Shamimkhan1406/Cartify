@@ -160,6 +160,7 @@ class _ShippingAddressScreenState extends ConsumerState<ShippingAddressScreen> {
                 state: _stateController.text,
                 city: _cityController.text,
                 locality: _localityController.text,
+                ref: ref,
               ).whenComplete((){
                 updateUser.recreateUserState(state: _stateController.text, city: _cityController.text, locality: _localityController.text);
                 Navigator.pop(context); // this will close the loading dialog
