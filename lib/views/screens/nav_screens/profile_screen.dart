@@ -1,5 +1,6 @@
 import 'package:cartify/controllers/auth_controller.dart';
 import 'package:cartify/provider/cart_provider.dart';
+import 'package:cartify/provider/delivered_order_count_provider.dart';
 import 'package:cartify/provider/favorite_provider.dart';
 import 'package:cartify/provider/user_provider.dart';
 import 'package:cartify/views/screens/detail/screens/order_screen.dart';
@@ -20,6 +21,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final buyerId = ref.read(userProvider)!.id;
+    // fetch the delivered order count when the widget is built
+    ref.read(deliveredOrderCountProvider.notifier).fetchDeliveredOrderCount(buyerId, context);
+    // watch the delivered order count to reactivly update the UI
+    final deliveredOrderCount = ref.watch(deliveredOrderCountProvider);
     final user = ref.read(userProvider);
     final cartData = ref.read(cartProvider);
     final favoriteCount = ref.read(favoriteProvider);
@@ -136,7 +142,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             left: 240,
                             top: 66,
                             child: Text(
-                              '15',
+                              deliveredOrderCount.toString(),
                               style: GoogleFonts.roboto(
                                 color: Colors.white,
                                 fontSize: 22,
