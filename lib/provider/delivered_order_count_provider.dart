@@ -19,6 +19,11 @@ class DeliveredOrderCountNotifier extends StateNotifier<int> {
       showSnackBar(context, 'Error fetching delivered order count: $e');
     }
   }
+
+  // methode to reset delivered order count
+  void resetDeliveredOrderCount() {
+    state = 0;
+  }
 }
 
 final deliveredOrderCountProvider = StateNotifierProvider<DeliveredOrderCountNotifier, int>(

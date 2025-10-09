@@ -1,5 +1,6 @@
 import 'package:cartify/global_variables.dart';
 import 'package:cartify/models/user.dart';
+import 'package:cartify/provider/delivered_order_count_provider.dart';
 import 'package:cartify/provider/user_provider.dart';
 import 'package:cartify/services/manage_http_response.dart';
 import 'package:cartify/views/screens/authentication_screen/login_screen.dart';
@@ -121,6 +122,7 @@ class AuthController {
       await preferences.remove("user");
       // clear the app state with the user data using reverpod
       providerContainer.read(userProvider.notifier).signOut();
+      providerContainer.read(deliveredOrderCountProvider.notifier).resetDeliveredOrderCount();
       // navigate to the login screen
       Navigator.pushAndRemoveUntil(
         context,
