@@ -1,6 +1,7 @@
 import 'package:cartify/controllers/auth_controller.dart';
 import 'package:cartify/views/screens/detail/screens/order_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
@@ -12,8 +13,10 @@ class ProfileScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
+            Container(
               height: 450,
+              clipBehavior: Clip.antiAlias,
+              decoration: const BoxDecoration(),
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
@@ -44,13 +47,15 @@ class ProfileScreen extends StatelessWidget {
                         alignment: Alignment(0, -0.53),
                         child: CircleAvatar(
                           radius: 65,
-                          backgroundImage: NetworkImage('https://cdn.pixabay.com/photo/2014/04/03/10/32/businessman-310819_1280.png'),
+                          backgroundImage: NetworkImage(
+                            'https://cdn.pixabay.com/photo/2014/04/03/10/32/businessman-310819_1280.png',
+                          ),
                         ),
                       ),
                       Align(
                         alignment: Alignment(0.23, -0.61),
                         child: InkWell(
-                          onTap: (){},
+                          onTap: () {},
                           child: Image.asset(
                             'assets/icons/edit.png',
                             width: 19,
@@ -58,9 +63,100 @@ class ProfileScreen extends StatelessWidget {
                             fit: BoxFit.cover,
                           ),
                         ),
-                      )
+                      ),
                     ],
-                  )
+                  ),
+                  Align(
+                    alignment: Alignment(0, 0.03),
+                    child: Text(
+                      'Shamim Khan',
+                      style: GoogleFonts.montserrat(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment(0.05, 0.17),
+                    child: InkWell(
+                      onTap: () {},
+                      child: Text(
+                        'Unitied States',
+                        style: GoogleFonts.montserrat(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment(0.09, 0.81),
+                    child: SizedBox(
+                      width: 287,
+                      height: 117,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Positioned(
+                            left: 240,
+                            top: 66,
+                            child: Text(
+                              '15',
+                              style: GoogleFonts.roboto(
+                                color: Colors.white,
+                                fontSize: 22,
+                                letterSpacing: 0.4,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 212,
+                            top: 99,
+                            child: Text(
+                              'Completed',
+                              style: GoogleFonts.quicksand(
+                                fontSize: 14,
+                                color: Colors.white,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 224,
+                            top: 2,
+                            child: Container(
+                              width: 52,
+                              height: 58,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    "https://storage.googleapis.com/codeless-dev.appspot.com/uploads%2Fimages%2Fnn2Ldqjoc2Xp89Y7Wfzf%2Ff0db1e22e37c1e2a001bbb5bd4b9aafc.png",
+                                  ),
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Positioned(
+                                    left: 13,
+                                    top: 18,
+                                    child: Image.network(
+                                      width: 26,
+                                      height: 26,
+                                      'https://firebasestorage.googleapis.com/v0/b/codeless-app.appspot.com/o/projects%2Fnn2Ldqjoc2Xp89Y7Wfzf%2F4ad2eb1752466c61c6bb41a0e223251a906a1a7bcorrect%201.png?alt=media&token=57abd4a6-50b4-4609-bb59-b48dce4c8cc6',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
