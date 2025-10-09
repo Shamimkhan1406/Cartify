@@ -233,7 +233,7 @@ class ProfileScreen extends StatelessWidget {
                             ),
                           ),
                           Positioned(
-                            left: 0,
+                            left: 4,
                             top: 0,
                             child: Container(
                               width: 56,
@@ -268,6 +268,71 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+            ),
+            ListTile(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const OrderScreen();
+                }));
+              },
+              leading: Image.asset(
+                'assets/icons/orders.png',
+              ),
+              title: Text(
+                'Track your order',
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ListTile(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const OrderScreen();
+                }));
+              },
+              leading: Image.asset(
+                'assets/icons/history.png',
+              ),
+              title: Text(
+                'History',
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ListTile(
+              onTap: () {},
+              leading: Image.asset(
+                'assets/icons/help.png',
+              ),
+              title: Text(
+                'Help',
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ListTile(
+              onTap: () {},
+              leading: Image.asset(
+                'assets/icons/logout.png',
+              ),
+              title: Text(
+                'Logout',
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
