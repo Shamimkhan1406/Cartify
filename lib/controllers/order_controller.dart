@@ -127,4 +127,18 @@ class OrderController {
       //print('Error deleting order: $e');
     }
   }
+
+  // method to count total delivered orders
+  Future<int> countDeliveredOrders({required String buyerId}) async{
+    try {
+      // load all orders for the given buyer id
+      List<Order> orders = await loadOrders(buyerId: buyerId);
+      // filter the orders to get only delivered orders
+      int deliveredCount = orders.where((order)=>order.delivered).length;
+
+      return deliveredCount;
+    } catch (e) {
+      throw Exception('Error counting delivered orders: $e');
+    }
+  }
 }
