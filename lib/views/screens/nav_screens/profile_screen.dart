@@ -3,6 +3,7 @@ import 'package:cartify/provider/cart_provider.dart';
 import 'package:cartify/provider/favorite_provider.dart';
 import 'package:cartify/provider/user_provider.dart';
 import 'package:cartify/views/screens/detail/screens/order_screen.dart';
+import 'package:cartify/views/screens/detail/screens/shipping_address_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -100,7 +101,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   Align(
                     alignment: Alignment(0.05, 0.17),
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ShippingAddressScreen(),
+                          ),
+                        );
+                      },
                       child: user.state != "" ? Text(
                         user.state,
                         style: GoogleFonts.montserrat(
