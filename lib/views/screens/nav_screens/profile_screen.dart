@@ -1,14 +1,27 @@
 import 'package:cartify/controllers/auth_controller.dart';
+import 'package:cartify/provider/cart_provider.dart';
+import 'package:cartify/provider/favorite_provider.dart';
+import 'package:cartify/provider/user_provider.dart';
 import 'package:cartify/views/screens/detail/screens/order_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   ProfileScreen({super.key});
+
+  @override
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final AuthController authController = AuthController();
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.read(userProvider);
+    final cartData = ref.read(cartProvider);
+    final favoriteCount = ref.read(favoriteProvider);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -68,8 +81,15 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   Align(
                     alignment: Alignment(0, 0.03),
-                    child: Text(
-                      'Shamim Khan',
+                    child: user!.fullName != "" ? Text(
+                      user.fullName,
+                      style: GoogleFonts.montserrat(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
+                    ) : Text(
+                      'User',
                       style: GoogleFonts.montserrat(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -81,8 +101,14 @@ class ProfileScreen extends StatelessWidget {
                     alignment: Alignment(0.05, 0.17),
                     child: InkWell(
                       onTap: () {},
-                      child: Text(
-                        'Unitied States',
+                      child: user.state != "" ? Text(
+                        user.state,
+                        style: GoogleFonts.montserrat(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ) :Text(
+                        'State',
                         style: GoogleFonts.montserrat(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -157,7 +183,7 @@ class ProfileScreen extends StatelessWidget {
                             left: 130,
                             top: 66,
                             child: Text(
-                              '5',
+                              favoriteCount.length.toString(),
                               style: GoogleFonts.roadRage(
                                 color: Colors.white,
                                 fontSize: 22,
@@ -212,7 +238,7 @@ class ProfileScreen extends StatelessWidget {
                             left: 20,
                             top: 66,
                             child: Text(
-                              '20',
+                              cartData.length.toString(),
                               style: GoogleFonts.montserrat(
                                 color: Colors.white,
                                 fontSize: 22,
