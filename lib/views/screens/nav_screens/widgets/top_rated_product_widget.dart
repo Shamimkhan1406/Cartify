@@ -12,6 +12,7 @@ class TopRatedProductWidget extends ConsumerStatefulWidget {
 }
 
 class _TopRatedProductWidgetState extends ConsumerState<TopRatedProductWidget> {
+  bool isLoading = true;
   // a Future that will hold the list of popular products
   //late Future<List<Product>> futurePopularProductsFuture;
   @override
@@ -27,6 +28,11 @@ class _TopRatedProductWidgetState extends ConsumerState<TopRatedProductWidget> {
         ref.read(topRatedProductProvider.notifier).setProducts(products);
       } catch (e) {
         print('Error fetching products: $e');
+      }
+      finally{
+        setState(() {
+          isLoading = false;
+        });
       }
     }
   @override
@@ -51,7 +57,11 @@ class _TopRatedProductWidgetState extends ConsumerState<TopRatedProductWidget> {
     if (products.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
-    return SizedBox(
+    return 
+    isLoading
+    ? const Center(child: CircularProgressIndicator())
+    :
+    SizedBox(
           height: 250,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,

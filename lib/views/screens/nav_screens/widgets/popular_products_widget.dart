@@ -8,10 +8,12 @@ class PopularProductsWidget extends ConsumerStatefulWidget {
   const PopularProductsWidget({super.key});
 
   @override
-  ConsumerState<PopularProductsWidget> createState() => _PopularProductsWidgetState();
+  ConsumerState<PopularProductsWidget> createState() =>
+      _PopularProductsWidgetState();
 }
 
 class _PopularProductsWidgetState extends ConsumerState<PopularProductsWidget> {
+  bool isLoading = true;
   // a Future that will hold the list of popular products
   //late Future<List<Product>> futurePopularProductsFuture;
   @override
@@ -20,15 +22,21 @@ class _PopularProductsWidgetState extends ConsumerState<PopularProductsWidget> {
     //futurePopularProductsFuture = ProductController().loadPopularProducts();
     _fetchProducts();
   }
-  Future<void> _fetchProducts() async{
-      final ProductController productController = ProductController();
-      try {
-        final products = await productController.loadPopularProducts();
-        ref.read(productProvider.notifier).setProducts(products);
-      } catch (e) {
-        print('Error fetching products: $e');
-      }
+
+  Future<void> _fetchProducts() async {
+    final ProductController productController = ProductController();
+    try {
+      final products = await productController.loadPopularProducts();
+      ref.read(productProvider.notifier).setProducts(products);
+    } catch (e) {
+      print('Error fetching products: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
+  }
+
   @override
   Widget build(BuildContext context) {
     // return FutureBuilder(future: futurePopularProductsFuture, builder: (context, snapshot){
@@ -43,7 +51,7 @@ class _PopularProductsWidgetState extends ConsumerState<PopularProductsWidget> {
     //   }
     //   else{
     //     final products = snapshot.data!;
-    //     return 
+    //     return
 
     //   }
     // });
@@ -51,14 +59,16 @@ class _PopularProductsWidgetState extends ConsumerState<PopularProductsWidget> {
     if (products.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
-    return SizedBox(
+    return isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : SizedBox(
           height: 250,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: products.length,
             itemBuilder: (context, index) {
               final product = products[index];
-              return ProductItemWidget(product: product,);
+              return ProductItemWidget(product: product);
             },
           ),
         );
