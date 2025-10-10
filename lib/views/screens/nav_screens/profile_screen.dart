@@ -18,6 +18,35 @@ class ProfileScreen extends ConsumerStatefulWidget {
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final AuthController authController = AuthController();
+  // show sign out dialog
+   void _showSignOutDialog( BuildContext context) {
+    showDialog(context: context, builder: (BuildContext context){
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),  
+        title: Text('Are You Sure?', style: GoogleFonts.montserrat(
+          fontWeight: FontWeight.bold,
+          color: Colors.black87,
+        ),),
+        content: Text('Do you want to sign out?', style: GoogleFonts.montserrat(
+          color: Colors.blueGrey,
+        ),),
+        actions: [
+          TextButton(onPressed: (){
+            Navigator.pop(context);
+          }, child: Text('No', style: GoogleFonts.montserrat(
+            color: Colors.blueGrey,
+          ),),),
+          TextButton(onPressed: () async {
+            await authController.signOutUser(context: context, ref: ref,);
+          }, child: Text('Yes', style: GoogleFonts.montserrat(
+            color: Colors.red,
+          ),),),
+        ],
+      );
+    });
+   } 
 
   @override
   Widget build(BuildContext context) {
@@ -364,8 +393,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
             const SizedBox(height: 10),
             ListTile(
-              onTap: () async {
-                await authController.signOutUser(context: context, ref: ref,);
+              onTap: () {
+                _showSignOutDialog(context);
               },
               leading: Image.asset('assets/icons/logout.png'),
               title: Text(
