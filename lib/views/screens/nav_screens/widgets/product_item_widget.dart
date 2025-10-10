@@ -50,11 +50,14 @@ class _ProductItemWidgetState extends ConsumerState<ProductItemWidget> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(24),
                     ),
-                    child: Image.network(
-                      widget.product.images[0],
-                      height: 170,
-                      width: 170,
-                      fit: BoxFit.cover,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        widget.product.images[0],
+                        height: 170,
+                        width: 170,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   Positioned(
