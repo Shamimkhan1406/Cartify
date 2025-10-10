@@ -1,4 +1,5 @@
 import 'package:cartify/controllers/product_controller.dart';
+import 'package:cartify/provider/product_provider.dart';
 import 'package:cartify/provider/top_rated_product_provider.dart';
 import 'package:cartify/views/screens/nav_screens/widgets/product_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,15 @@ class _TopRatedProductWidgetState extends ConsumerState<TopRatedProductWidget> {
   void initState() {
     super.initState();
     //futurePopularProductsFuture = ProductController().loadPopularProducts();
-    _fetchProducts();
+    final products = ref.read(productProvider);
+    if (products.isEmpty) {
+     _fetchProducts();
+    }
+    else{
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
   Future<void> _fetchProducts() async{
       final ProductController productController = ProductController();

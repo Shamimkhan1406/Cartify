@@ -20,7 +20,15 @@ class _PopularProductsWidgetState extends ConsumerState<PopularProductsWidget> {
   void initState() {
     super.initState();
     //futurePopularProductsFuture = ProductController().loadPopularProducts();
-    _fetchProducts();
+    final products = ref.read(productProvider);
+    if (products.isEmpty) {
+     _fetchProducts();
+    }
+    else{
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> _fetchProducts() async {
