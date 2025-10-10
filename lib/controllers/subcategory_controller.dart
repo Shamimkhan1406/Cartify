@@ -18,20 +18,20 @@ class SubCategoryController{
           return data.map((subcategory)=> SubCategory.fromJson(subcategory)).toList();
         }
         else{
-          print("No subcategories found");
+          //print("No subcategories found");
           return [];
         }
       }
       else if(response.statusCode == 404){
-        print("No subcategories found for category $categoryName");
+        //print("No subcategories found for category $categoryName");
         return [];
       }
       else{
-        print("Failed to load subcategories: ${response.statusCode}");
+        //print("Failed to load subcategories: ${response.statusCode}");
         return [];
       }
     }catch(e){
-      print("Error loading subcategories: $e");
+      //print("Error loading subcategories: $e");
       return [];
     }
   }

@@ -94,7 +94,11 @@ class OrderController {
         // this convert the lis to raw data into list of order object
         List<Order> orders = data.map((order) => Order.fromJson(order)).toList();
         return orders;
-      } else {
+      } 
+      else if(response.statusCode == 404){
+        return [];
+      }
+      else {
         // throw an exception if the response is not successful
         throw Exception('Failed to load orders');
       }

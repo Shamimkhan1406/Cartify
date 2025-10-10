@@ -28,6 +28,9 @@ class BannerController {
         List <BannerModel> banners = data.map((banner)=>BannerModel.fromJson(banner)).toList();
         return banners;
       }
+      else if(response.statusCode == 404){
+        return [];
+      }
       else{
         throw Exception("Failed to load banners");
       }

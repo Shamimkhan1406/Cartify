@@ -23,6 +23,9 @@ class ProductController {
         return products;
 
       }
+      else if(response.statusCode == 404){
+        return [];
+      }
       else{
         // if the response status code is not 200, throw an error
         throw Exception('Failed to load popular products');
@@ -49,7 +52,11 @@ class ProductController {
         // map the list of dynamic objects to a list of Product objects
         List<Product> products = data.map((product)=> Product.fromMap(product as Map<String, dynamic>)).toList();
         return products;
-      } else {
+      }
+      else if(response.statusCode == 404){
+        return [];
+      }
+      else {
         // if the response status code is not 200, throw an error
         throw Exception('Failed to load recommended products');
       }
@@ -75,7 +82,11 @@ class ProductController {
         // map the list of dynamic objects to a list of Product objects
         List<Product> products = data.map((product)=> Product.fromMap(product as Map<String, dynamic>)).toList();
         return products;
-      } else {
+      }
+      else if(response.statusCode == 404){
+        return [];
+      } 
+      else {
         // if the response status code is not 200, throw an error
         throw Exception('Failed to load recommended products');
       }
@@ -102,7 +113,11 @@ class ProductController {
         // map the list of dynamic objects to a list of Product objects
         List<Product> relatedProducts = data.map((product)=> Product.fromMap(product as Map<String, dynamic>)).toList();
         return relatedProducts;
-      } else {
+      } 
+      else if(response.statusCode == 404){
+        return [];
+      }
+      else {
         // if the response status code is not 200, throw an error
         throw Exception('Failed to load relatedProducts');
       }
@@ -129,7 +144,11 @@ class ProductController {
         // map the list of dynamic objects to a list of Product objects
         List<Product> topRatedProduct = data.map((product)=> Product.fromMap(product as Map<String, dynamic>)).toList();
         return topRatedProduct;
-      } else {
+      } 
+      else if(response.statusCode == 404){
+        return [];
+      }
+      else {
         // if the response status code is not 200, throw an error
         throw Exception('Failed to load top rated products');
       }
