@@ -69,7 +69,7 @@ class _SubcategoryProductScreenState extends ConsumerState<SubcategoryProductScr
         ? const Center(child: CircularProgressIndicator())
         : Padding(
           padding: const EdgeInsets.all(8.0),
-          child: GridView.builder( itemCount: products.length, gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: crossAxisCount, childAspectRatio: childAspectRatio, mainAxisSpacing: 8, crossAxisSpacing: 8), itemBuilder: (context, index){
+          child: products.isEmpty ? const Center(child: Text('No products found')) : GridView.builder( itemCount: products.length, gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: crossAxisCount, childAspectRatio: childAspectRatio, mainAxisSpacing: 8, crossAxisSpacing: 8), itemBuilder: (context, index){
             final product = products[index];
             return ProductItemWidget(product: product);
           }),
