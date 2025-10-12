@@ -22,15 +22,18 @@ class _SubcategoryProductScreenState extends ConsumerState<SubcategoryProductScr
   void initState() {
     super.initState();
     //futurePopularProductsFuture = ProductController().loadPopularProducts();
-    final products = ref.read(subcategoryProductProvider);
-    if (products.isEmpty) {
-     _fetchProducts();
-    }
-    else{
-      setState(() {
-        isLoading = false;
-      });
-    }
+
+    _fetchProducts();
+
+    // final products = ref.read(subcategoryProductProvider);
+    // if (products.isEmpty) {
+    //  _fetchProducts();
+    // }
+    // else{
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // }
   }
 
   Future<void> _fetchProducts() async {
