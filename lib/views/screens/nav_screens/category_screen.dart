@@ -3,6 +3,7 @@ import 'package:cartify/controllers/subcategory_controller.dart';
 import 'package:cartify/models/category.dart';
 import 'package:cartify/provider/category_provider.dart';
 import 'package:cartify/provider/subcategory_provider.dart';
+import 'package:cartify/views/screens/detail/screens/subcategory_product_screen.dart';
 import 'package:cartify/views/screens/nav_screens/widgets/header_widget.dart';
 import 'package:cartify/views/screens/nav_screens/widgets/subcategory_tile_widget.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,8 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
   }
 
   Future<void> _fetchSubcategories(String categoryName) async {
-    final subcategories = await SubCategoryController().getSubCategoryByCategoryName(categoryName);
+    final subcategories = await SubCategoryController()
+        .getSubCategoryByCategoryName(categoryName);
     ref.read(subCategoryProvider.notifier).setSubcategories(subcategories);
   }
   // List<SubCategory> _subcategories =
@@ -104,30 +106,30 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
             child: Container(
               color: Colors.grey.shade50,
               child: ListView.builder(
-                      itemCount: categories.length,
-                      itemBuilder: (context, index) {
-                        final category = categories[index];
-                        return ListTile(
-                          onTap: () {
-                            setState(() {
-                              _selectedCategory = category;
-                            });
-                            _fetchSubcategories(category.name);
-                          },
-                          title: Text(
-                            category.name,
-                            style: GoogleFonts.quicksand(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color:
-                                  _selectedCategory == category
-                                      ? Colors.blue
-                                      : Colors.black,
-                            ),
-                          ),
-                        );
-                      },
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  final category = categories[index];
+                  return ListTile(
+                    onTap: () {
+                      setState(() {
+                        _selectedCategory = category;
+                      });
+                      _fetchSubcategories(category.name);
+                    },
+                    title: Text(
+                      category.name,
+                      style: GoogleFonts.quicksand(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color:
+                            _selectedCategory == category
+                                ? Colors.blue
+                                : Colors.black,
+                      ),
                     ),
+                  );
+                },
+              ),
             ),
           ),
           // display the selected category banner
@@ -156,7 +158,9 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                               height: 200,
                               decoration: BoxDecoration(
                                 image: DecorationImage(
-                                  image: NetworkImage(_selectedCategory!.banner),
+                                  image: NetworkImage(
+                                    _selectedCategory!.banner,
+                                  ),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -164,7 +168,6 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                           ),
                           subcategories.isNotEmpty
                               ? GridView.builder(
-                                
                                 shrinkWrap: true,
                                 itemCount: subcategories.length,
                                 physics: const NeverScrollableScrollPhysics(),
@@ -173,11 +176,29 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                                       crossAxisCount: 3,
                                       crossAxisSpacing: 4,
                                       mainAxisSpacing: 4,
-                                      childAspectRatio: 2/3
+                                      childAspectRatio: 2 / 3,
                                     ),
                                 itemBuilder: (context, index) {
                                   final subcategory = subcategories[index];
-                                  return SubcategoryTileWidget(title: subcategory.subCategoryName, image: subcategory.image);
+                                  return GestureDetector(
+                                    onTap: () {
+                                      // navigate to subcategory products screen
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) =>
+                                                  SubcategoryProductScreen(
+                                                    subCategory: subcategory,
+                                                  ),
+                                        ),
+                                      );
+                                    },
+                                    child: SubcategoryTileWidget(
+                                      title: subcategory.subCategoryName,
+                                      image: subcategory.image,
+                                    ),
+                                  );
                                 },
                               )
                               : Center(
