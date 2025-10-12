@@ -3,6 +3,7 @@ import 'package:cartify/controllers/subcategory_controller.dart';
 import 'package:cartify/models/category.dart';
 import 'package:cartify/models/product.dart';
 import 'package:cartify/models/subcategory.dart';
+import 'package:cartify/views/screens/detail/screens/subcategory_product_screen.dart';
 import 'package:cartify/views/screens/detail/screens/widgets/inner_banner_widget.dart';
 import 'package:cartify/views/screens/detail/screens/widgets/inner_header_widget.dart';
 import 'package:cartify/views/screens/nav_screens/widgets/product_item_widget.dart';
@@ -94,9 +95,25 @@ class _InnerCategoryContentWidgetState
                                           : end,
                                     )
                                     .map(
-                                      (subcategory) => SubcategoryTileWidget(
-                                        title: subcategory.subCategoryName,
-                                        image: subcategory.image,
+                                      (subcategory) => GestureDetector(
+                                        onTap: () {
+                                          // navigate to subcategory products screen
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder:
+                                                  (context) =>
+                                                      SubcategoryProductScreen(
+                                                        subCategory:
+                                                            subcategory,
+                                                      ),
+                                            ),
+                                          );
+                                        },
+                                        child: SubcategoryTileWidget(
+                                          title: subcategory.subCategoryName,
+                                          image: subcategory.image,
+                                        ),
                                       ),
                                     )
                                     .toList(),
@@ -118,7 +135,9 @@ class _InnerCategoryContentWidgetState
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No products found under this category.'));
+                  return const Center(
+                    child: Text('No products found under this category.'),
+                  );
                 } else {
                   final products = snapshot.data!;
                   return SizedBox(
