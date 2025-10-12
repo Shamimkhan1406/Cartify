@@ -1,3 +1,4 @@
+import 'package:cartify/views/screens/detail/screens/searched_product_screen.dart';
 import 'package:flutter/material.dart';
 
 class HeaderWidget extends StatelessWidget {
@@ -22,6 +23,14 @@ class HeaderWidget extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.6,
               height: MediaQuery.of(context).size.height * 0.2,
               child: TextField(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SearchedProductScreen(),
+                    ),
+                  );
+                },
                 decoration: InputDecoration(
                   hintText: 'Search',
                   hintStyle: TextStyle(fontSize: 15, color: Colors.white),

@@ -11,10 +11,12 @@ class SubcategoryProductScreen extends ConsumerStatefulWidget {
   const SubcategoryProductScreen({super.key, required this.subCategory});
 
   @override
-  ConsumerState<SubcategoryProductScreen> createState() => _SubcategoryProductScreenState();
+  ConsumerState<SubcategoryProductScreen> createState() =>
+      _SubcategoryProductScreenState();
 }
 
-class _SubcategoryProductScreenState extends ConsumerState<SubcategoryProductScreen> {
+class _SubcategoryProductScreenState
+    extends ConsumerState<SubcategoryProductScreen> {
   bool isLoading = true;
   // a Future that will hold the list of popular products
   //late Future<List<Product>> futurePopularProductsFuture;
@@ -39,7 +41,9 @@ class _SubcategoryProductScreenState extends ConsumerState<SubcategoryProductScr
   Future<void> _fetchProducts() async {
     final ProductController productController = ProductController();
     try {
-      final products = await productController.loadProductsBySubCategory(widget.subCategory.subCategoryName);
+      final products = await productController.loadProductsBySubCategory(
+        widget.subCategory.subCategoryName,
+      );
       ref.read(subcategoryProductProvider.notifier).setProducts(products);
     } catch (e) {
       print('Error fetching products: $e');
@@ -49,6 +53,7 @@ class _SubcategoryProductScreenState extends ConsumerState<SubcategoryProductScr
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final products = ref.watch(subcategoryProductProvider);
@@ -60,20 +65,32 @@ class _SubcategoryProductScreenState extends ConsumerState<SubcategoryProductScr
     // set the expect ration (screen to height ) of each grid based on the screen width
     // for smaller screen, set the expect ratio to 3.4 taller items
     // for larger screen, set the expect ratio to 4.5 square items
-    final childAspectRatio = screenWidth < 600 ? 3/4 : 4/5;
+    final childAspectRatio = screenWidth < 600 ? 3 / 4 : 4 / 5;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.subCategory.subCategoryName),
-      ),
-      body: isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: products.isEmpty ? const Center(child: Text('No products found')) : GridView.builder( itemCount: products.length, gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: crossAxisCount, childAspectRatio: childAspectRatio, mainAxisSpacing: 8, crossAxisSpacing: 8), itemBuilder: (context, index){
-            final product = products[index];
-            return ProductItemWidget(product: product);
-          }),
-        )
+      appBar: AppBar(title: Text(widget.subCategory.subCategoryName)),
+      body:
+          isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:
+                    products.isEmpty
+                        ? const Center(child: Text('No products found'))
+                        : GridView.builder(
+                          itemCount: products.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: crossAxisCount,
+                                childAspectRatio: childAspectRatio,
+                                mainAxisSpacing: 8,
+                                crossAxisSpacing: 8,
+                              ),
+                          itemBuilder: (context, index) {
+                            final product = products[index];
+                            return ProductItemWidget(product: product);
+                          },
+                        ),
+              ),
     );
   }
 }

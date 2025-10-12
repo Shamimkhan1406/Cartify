@@ -204,19 +204,19 @@ class ProductController {
         final List<dynamic> data = jsonDecode(response.body) as List<dynamic>;
 
         // map the list of dynamic objects to a list of Product objects
-        List<Product> relatedProducts = data.map((product)=> Product.fromMap(product as Map<String, dynamic>)).toList();
-        return relatedProducts;
+        List<Product> searchedProducts = data.map((product)=> Product.fromMap(product as Map<String, dynamic>)).toList();
+        return searchedProducts;
       } 
       else if(response.statusCode == 404){
         return [];
       }
       else {
         // if the response status code is not 200, throw an error
-        throw Exception('Failed to load SubCategory Products');
+        throw Exception('Failed to load searched Products');
       }
     } catch (e) {
       // Handle error
-      throw Exception('Error loading SubCategory Products by subcategory: $e');
+      throw Exception('Error loading searched Products : $e');
       
     }
   }
