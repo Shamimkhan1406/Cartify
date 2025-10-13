@@ -6,27 +6,26 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../global_variables.dart';
 
-
 class OrderController {
   // function to upload order
   Future<void> uploadOrder({
-  required String id,
-  required String productId,
-  required String fullName,
-  required String email,
-  required String state,
-  required String city,
-  required String locality,
-  required String productName,
-  required double productPrice,
-  required int quantity,
-  required String category,
-  required String image,
-  required String buyerId,
-  required String vendorId,
-  required bool processing,
-  required bool delivered,
-  required context,
+    required String id,
+    required String productId,
+    required String fullName,
+    required String email,
+    required String state,
+    required String city,
+    required String locality,
+    required String productName,
+    required double productPrice,
+    required int quantity,
+    required String category,
+    required String image,
+    required String buyerId,
+    required String vendorId,
+    required bool processing,
+    required bool delivered,
+    required context,
   }) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -54,23 +53,29 @@ class OrderController {
         processing: processing,
         delivered: delivered,
       );
-      http.Response response = await http.post(Uri.parse('$uri/api/orders'),
-      body: order.toJson(),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': token,
-      },
+      http.Response response = await http.post(
+        Uri.parse('$uri/api/orders'),
+        body: order.toJson(),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token,
+        },
       );
-      manageHttpResponse(response: response, context: context, onSuccess: (){
-        showSnackBar(context, 'you have successfully placed the order');
-      });
+      manageHttpResponse(
+        response: response,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, 'you have successfully placed the order');
+        },
+      );
     } catch (e) {
       showSnackBar(context, 'Error uploading order: $e');
       print('Error uploading order: $e');
     }
   }
+
   // functions to get orders by buyer id
-  Future<List<Order>> loadOrders({required String buyerId}) async{
+  Future<List<Order>> loadOrders({required String buyerId}) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
@@ -79,26 +84,26 @@ class OrderController {
         return [];
       }
       // send http get request to the server
-      http.Response response = await http.get(Uri.parse('$uri/api/orders/$buyerId'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': token,
-      },
+      http.Response response = await http.get(
+        Uri.parse('$uri/api/orders/$buyerId'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token,
+        },
       );
-    // check if the response is successful
+      // check if the response is successful
       if (response.statusCode == 200) {
-        // parse the response body into dynamic list 
+        // parse the response body into dynamic list
         // this convert the json data into a format that can be used in dart
         List<dynamic> data = jsonDecode(response.body);
         // map the dhynamic list to list of order object using the from json factory method
         // this convert the lis to raw data into list of order object
-        List<Order> orders = data.map((order) => Order.fromJson(order)).toList();
+        List<Order> orders =
+            data.map((order) => Order.fromJson(order)).toList();
         return orders;
-      } 
-      else if(response.statusCode == 404){
+      } else if (response.statusCode == 404) {
         return [];
-      }
-      else {
+      } else {
         // throw an exception if the response is not successful
         throw Exception('Failed to load orders');
       }
@@ -106,8 +111,9 @@ class OrderController {
       throw Exception('Error loading orders: $e');
     }
   }
+
   // delete order by id
-  Future<void> deleteOrder({required String id, required context}) async{
+  Future<void> deleteOrder({required String id, required context}) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
@@ -116,16 +122,21 @@ class OrderController {
         showSnackBar(context, 'Authentication error. Please log in again.');
         return;
       }
-      
-      http.Response response = await http.delete(Uri.parse('$uri/api/orders/$id'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': token,
-      },
+
+      http.Response response = await http.delete(
+        Uri.parse('$uri/api/orders/$id'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token,
+        },
       );
-      manageHttpResponse(response: response, context: context, onSuccess: (){
-        showSnackBar(context, 'Order deleted successfully');
-      });
+      manageHttpResponse(
+        response: response,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, 'Order deleted successfully');
+        },
+      );
     } catch (e) {
       showSnackBar(context, 'Error deleting order: $e');
       //print('Error deleting order: $e');
@@ -133,16 +144,42 @@ class OrderController {
   }
 
   // method to count total delivered orders
-  Future<int> countDeliveredOrders({required String buyerId}) async{
+  Future<int> countDeliveredOrders({required String buyerId}) async {
     try {
       // load all orders for the given buyer id
       List<Order> orders = await loadOrders(buyerId: buyerId);
       // filter the orders to get only delivered orders
-      int deliveredCount = orders.where((order)=>order.delivered).length;
+      int deliveredCount = orders.where((order) => order.delivered).length;
 
       return deliveredCount;
     } catch (e) {
       throw Exception('Error counting delivered orders: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> createPaymentIntent({
+    required int amount,
+    required String currency,
+  }) async {
+    try {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      String? token = pref.getString('auth_token');
+      http.Response response = await http.post(
+        Uri.parse('$uri/api/payment-intent'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token!,
+        },
+
+        body: jsonEncode({'amount': amount, 'currency': currency}),
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to create payment intent');
+      }
+    } catch (e) {
+      throw Exception('Error creating payment intent: $e');
     }
   }
 }
