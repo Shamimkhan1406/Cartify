@@ -6,6 +6,7 @@ import 'package:cartify/views/screens/detail/screens/shipping_address_screen.dar
 import 'package:cartify/views/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CheckoutScreen extends ConsumerStatefulWidget {
@@ -18,6 +19,91 @@ class CheckoutScreen extends ConsumerStatefulWidget {
 class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   final OrderController _orderController = OrderController();
   String selectedPaymentMethod = 'stripe'; // Default payment method
+  bool isLoading = false;
+
+  Future<void> handleStripePayment(BuildContext context) async {
+    // fetch the cart items from the cart provider
+    final cartData = ref.read(cartProvider);
+    // fetch the user data from the user provider
+    //final user = ref.read(userProvider)!;
+    // check if cart is empty
+    if (cartData.isEmpty) {
+      // show a snackbar message
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Your cart is empty')));
+      return;
+    }
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      // calculate the total amount for all items in the cart
+      final totalAmount = cartData.values.fold(
+        0.0,
+        (sum, item) => sum + (item.productPrice * item.quantity),
+      );
+      // check if total amount is greater than zero
+      if (totalAmount <= 0) {
+        showSnackBar(context, "Total amount must be greater than zero");
+        return;
+      }
+      // create a payment intent with calculated amount and currency
+      final paymentIntent = await _orderController.createPaymentIntent(
+        amount: (totalAmount * 100).toInt(),
+        currency: "inr",
+      );
+      // initialize the stripe payment sheet with the payment intent data
+      await Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: SetupPaymentSheetParameters(
+          paymentIntentClientSecret: paymentIntent['client_secret'],
+          merchantDisplayName: 'Cartify',
+          
+        ),
+      );
+      // present the payment sheet to the user
+      await Stripe.instance.presentPaymentSheet();
+      // upload each cart item as an order
+      for (final entry in cartData.entries) {
+        final item = entry.value;
+        await _orderController.uploadOrder(
+          id: '',
+          productId: item.productId,
+          fullName: ref.read(userProvider)!.fullName,
+          email: ref.read(userProvider)!.email,
+          // state:
+          //     "west bengal", // You can replace this with actual state
+          // city:
+          //     "kolkata", // You can replace this with actual city
+          // locality:
+          //     "sector 5", // You can replace this with actual locality
+          state: ref.read(userProvider)!.state,
+          city: ref.read(userProvider)!.city,
+          locality: ref.read(userProvider)!.locality,
+          productName: item.productName,
+          productPrice: item.productPrice,
+          quantity: item.quantity,
+          category: item.category,
+          image: item.images[0],
+          buyerId: ref.read(userProvider)!.id,
+          vendorId: item.vendorId,
+          processing: true,
+          delivered: false,
+          context: context,
+        );
+      }
+    } catch (e) {
+      showSnackBar(context, 'Payment failed: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+    // clear the cart after successful payment and order placement
+    ref.read(cartProvider.notifier).clearCart();
+    // navigate to the main screen after successful payment
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
@@ -410,6 +496,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   onTap: () async {
                     if (selectedPaymentMethod == 'stripe') {
                       // Handle Stripe payment logic here
+                      handleStripePayment(context);
                       // For example, navigate to a Stripe payment screen
                     } else {
                       // Handle Cash on Delivery logic here
@@ -443,10 +530,13 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                           delivered: false,
                           context: context,
                         );
-                      }).then((value){
+                      }).then((value) {
                         _cartProvider.clearCart();
                         //showSnackBar(context, 'Order placed successfully');
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> MainScreen()));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MainScreen()),
+                        );
                       });
                     }
                   },
@@ -459,7 +549,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
-                      child: Text(
+                      child: isLoading ? const CircularProgressIndicator() : Text(
                         selectedPaymentMethod == 'stripe'
                             ? 'Pay now'
                             : 'Place order',

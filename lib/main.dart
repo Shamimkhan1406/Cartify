@@ -1,4 +1,5 @@
 //import 'package:cartify/views/screens/authentication_screen/login_screen.dart';
+import 'package:cartify/global_variables.dart';
 import 'package:cartify/provider/user_provider.dart';
 import 'package:cartify/views/screens/authentication_screen/login_screen.dart';
 import 'package:cartify/views/screens/main_screen.dart';
@@ -6,9 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future <void> main() async {
+  // ensure flutter binding is initialized before any other setup
+  WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey = stripePublishableKey;
+
+  await Stripe.instance.applySettings();
+  
   // run the flutter app wrapped in a providerScope for managing state
   await dotenv.load();
   runApp(ProviderScope(child: const MyApp()));
