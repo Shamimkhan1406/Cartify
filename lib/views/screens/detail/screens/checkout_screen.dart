@@ -63,8 +63,12 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       );
       // present the payment sheet to the user
       await Stripe.instance.presentPaymentSheet();
-      // upload each cart item as an order
-      for (final entry in cartData.entries) {
+
+      // verify payment intent status
+      final paymentStatus = await _orderController.getPaymentIntentStatus(context: context, paymentIntentId: paymentIntent['id']);
+      if (paymentStatus['status']=='succeeded'){
+        // upload each cart item as an order
+        for (final entry in cartData.entries) {
         final item = entry.value;
         await _orderController.uploadOrder(
           id: '',
@@ -92,6 +96,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           context: context,
         );
       }
+      }
+      
     } catch (e) {
       showSnackBar(context, 'Payment failed: $e');
     } finally {

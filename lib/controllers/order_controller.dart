@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cartify/models/order.dart';
 import 'package:cartify/services/manage_http_response.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../global_variables.dart';
@@ -180,6 +181,32 @@ class OrderController {
       }
     } catch (e) {
       throw Exception('Error creating payment intent: $e');
+    }
+  }
+
+  // retrive payment intent by id to confirm payment
+  Future<Map<String, dynamic>> getPaymentIntentStatus({
+    required BuildContext context,
+    required String paymentIntentId,
+  }) async {
+    try {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      String? token = pref.getString('auth_token');
+
+      http.Response response = await http.get(
+        Uri.parse('$uri/api/payment-intent/$paymentIntentId'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token!,
+        },
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to fetch payment intent status');
+      }
+    } catch (e) {
+      throw Exception('Error fetching payment intent status: $e');
     }
   }
 }
