@@ -93,6 +93,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           vendorId: item.vendorId,
           processing: true,
           delivered: false,
+          paymentStatus: paymentStatus['status'],
+          paymentIntentId: paymentStatus['id'],
+          paymentMethod: 'card',
           context: context,
         );
       }
@@ -534,6 +537,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                           vendorId: item.vendorId,
                           processing: true,
                           delivered: false,
+                          paymentStatus: 'pending',
+                          paymentIntentId: 'COD',
+                          paymentMethod: 'cashOnDelivery',
                           context: context,
                         );
                       }).then((value) {

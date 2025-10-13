@@ -26,6 +26,9 @@ class OrderController {
     required String vendorId,
     required bool processing,
     required bool delivered,
+    required String paymentStatus,
+    required String paymentIntentId,
+    required String paymentMethod,
     required context,
   }) async {
     try {
@@ -53,6 +56,9 @@ class OrderController {
         vendorId: vendorId,
         processing: processing,
         delivered: delivered,
+        paymentStatus: paymentStatus,
+        paymentIntentId: paymentIntentId,
+        paymentMethod: paymentMethod,
       );
       http.Response response = await http.post(
         Uri.parse('$uri/api/orders'),
