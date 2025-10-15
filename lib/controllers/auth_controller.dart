@@ -253,9 +253,9 @@ class AuthController {
           await preferences.remove("user");
           //clean the user state
           ref.read(userProvider.notifier).signOut();
-          ref
-              .read(deliveredOrderCountProvider.notifier)
-              .resetDeliveredOrderCount();
+          // ref
+          //     .read(deliveredOrderCountProvider.notifier)
+          //     .resetDeliveredOrderCount();
           // navigate to login screen
           Navigator.pushAndRemoveUntil(
             context,

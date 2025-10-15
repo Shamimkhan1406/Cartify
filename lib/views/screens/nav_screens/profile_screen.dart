@@ -402,6 +402,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 style: GoogleFonts.montserrat(fontWeight: FontWeight.bold),
               ),
             ),
+            const SizedBox(height: 10),
+            ListTile(
+              onTap: () async{
+                // implement account deletion functionality
+                await authController.deleteAccount(context: context,id: user.id, ref: ref);
+              },
+              leading: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 9),
+                child: Icon(Icons.delete_outline_outlined, color: Colors.red, size: 30,),
+              ),
+              title: Text(
+                'Delete Account',
+                style: GoogleFonts.montserrat(fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(height: 10),
           ],
         ),
       ),
