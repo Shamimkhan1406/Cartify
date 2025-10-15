@@ -183,4 +183,38 @@ class AuthController {
       showSnackBar(context, "Location update failed: ${e.toString()}");
     }
   }
+  // method to verify user account with otp
+  Future<void> verifyOtp({
+    required BuildContext context,
+    required String email,
+    required String otp,
+  }) async {
+    try {
+      http.Response response = await http.post(
+        Uri.parse('$uri/api/verify-otp'),
+        body: jsonEncode({
+          'email': email,
+          'otp': otp,
+        }),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      manageHttpResponse(
+        response: response,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, 'Account verified successfully\n Please login to continue');
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginScreen()),
+            (route) => false,
+          );
+        },
+      );
+    } catch (e) {
+      //print('Error during OTP verification: $e');
+      showSnackBar(context, "OTP verification failed: ${e.toString()}");
+    }
+  }
 }
