@@ -52,7 +52,7 @@ class AuthController {
           // navigate to the main screen
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => OtpScreen(email: email,)),
+            MaterialPageRoute(builder: (context) => OtpScreen(email: email)),
           );
         },
       );
@@ -114,7 +114,10 @@ class AuthController {
   }
 
   // sign out user
-  Future<void> signOutUser({required BuildContext context,required WidgetRef ref,}) async {
+  Future<void> signOutUser({
+    required BuildContext context,
+    required WidgetRef ref,
+  }) async {
     try {
       // access shared prefferences to save the token and user data storage
       SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -147,42 +150,43 @@ class AuthController {
     required String city,
     required String locality,
     required WidgetRef ref,
-  }) async{
+  }) async {
     try {
       // make a PUT request to update the user location
-      http.Response response = await http.put(Uri.parse('$uri/api/users/$id'),
-      // encode the updated data the state city and locality as json
-      body: jsonEncode({
-        'state': state,
-        'city': city,
-        'locality': locality,
-      }),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-
+      http.Response response = await http.put(
+        Uri.parse('$uri/api/users/$id'),
+        // encode the updated data the state city and locality as json
+        body: jsonEncode({'state': state, 'city': city, 'locality': locality}),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
       );
-      manageHttpResponse(response: response, context: context, onSuccess: () async {
-        showSnackBar(context, "location updated successfully");
-        // decode the response body to get the updated user data
-        final updatedUser = jsonDecode(response.body);
-        // access shared prefferences to save the updated user data
-        SharedPreferences preferences = await SharedPreferences.getInstance();
-        // encode the updated user data as json
-        // this is to ensure that the user data is stored in the same format as before
-        final userJson = jsonEncode(updatedUser);
-        // update the app state with the updated user data using reverpod
-        // this is to ensure that the user data is updated in the app state
-        ref.read(userProvider.notifier).setUser(userJson);
-        // store the updated user data in shared preferences for future use
-        // this allows the app to retrieve the updated user data even after the app is restarted
-        await preferences.setString("user", userJson);
-      });
+      manageHttpResponse(
+        response: response,
+        context: context,
+        onSuccess: () async {
+          showSnackBar(context, "location updated successfully");
+          // decode the response body to get the updated user data
+          final updatedUser = jsonDecode(response.body);
+          // access shared prefferences to save the updated user data
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          // encode the updated user data as json
+          // this is to ensure that the user data is stored in the same format as before
+          final userJson = jsonEncode(updatedUser);
+          // update the app state with the updated user data using reverpod
+          // this is to ensure that the user data is updated in the app state
+          ref.read(userProvider.notifier).setUser(userJson);
+          // store the updated user data in shared preferences for future use
+          // this allows the app to retrieve the updated user data even after the app is restarted
+          await preferences.setString("user", userJson);
+        },
+      );
     } catch (e) {
       print('Error updating user location: $e');
       showSnackBar(context, "Location update failed: ${e.toString()}");
     }
   }
+
   // method to verify user account with otp
   Future<void> verifyOtp({
     required BuildContext context,
@@ -192,10 +196,7 @@ class AuthController {
     try {
       http.Response response = await http.post(
         Uri.parse('$uri/api/verify-otp'),
-        body: jsonEncode({
-          'email': email,
-          'otp': otp,
-        }),
+        body: jsonEncode({'email': email, 'otp': otp}),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -204,7 +205,10 @@ class AuthController {
         response: response,
         context: context,
         onSuccess: () {
-          showSnackBar(context, 'Account verified successfully\n Please login to continue');
+          showSnackBar(
+            context,
+            'Account verified successfully\n Please login to continue',
+          );
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -215,6 +219,55 @@ class AuthController {
     } catch (e) {
       //print('Error during OTP verification: $e');
       showSnackBar(context, "OTP verification failed: ${e.toString()}");
+    }
+  }
+
+  // methode to delete user account
+  Future<void> deleteAccount({
+    required BuildContext context,
+    required String id,
+    required WidgetRef ref,
+  }) async {
+    try {
+      // get the auth token from shared preferences for authentication
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      String? token = preferences.getString('auth_token');
+      if (token == null) {
+        showSnackBar(context, 'Authentication error. Please log in again.');
+        return;
+      }
+      // send a DELETE request to the server to delete the user account
+      http.Response response = await http.delete(
+        Uri.parse('$uri/api/delete-users/$id'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token,
+        },
+      );
+      manageHttpResponse(
+        response: response,
+        context: context,
+        onSuccess: () async {
+          // clear local storage and app state
+          await preferences.remove("auth_token");
+          await preferences.remove("user");
+          //clean the user state
+          ref.read(userProvider.notifier).signOut();
+          ref
+              .read(deliveredOrderCountProvider.notifier)
+              .resetDeliveredOrderCount();
+          // navigate to login screen
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginScreen()),
+            (route) => false,
+          );
+          showSnackBar(context, 'Account deleted successfully');
+        },
+      );
+    } catch (e) {
+      //print('Error deleting account: $e');
+      showSnackBar(context, "Account deletion failed: ${e.toString()}");
     }
   }
 }
