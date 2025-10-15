@@ -4,6 +4,7 @@ import 'package:cartify/provider/delivered_order_count_provider.dart';
 import 'package:cartify/provider/user_provider.dart';
 import 'package:cartify/services/manage_http_response.dart';
 import 'package:cartify/views/screens/authentication_screen/login_screen.dart';
+import 'package:cartify/views/screens/authentication_screen/otp_screen.dart';
 import 'package:cartify/views/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,7 +52,7 @@ class AuthController {
           // navigate to the main screen
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => LoginScreen()),
+            MaterialPageRoute(builder: (context) => OtpScreen(email: email,)),
           );
         },
       );
