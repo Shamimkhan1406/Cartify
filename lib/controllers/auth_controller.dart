@@ -91,20 +91,22 @@ class AuthController {
           // strore the auth token in shared preferences
           await preferences.setString("auth_token", token);
           // encode the user data received from the backend as json
-          final userJson = jsonEncode(jsonDecode(response.body)['user']);
+          final userJson = jsonEncode(jsonDecode(response.body));
           // update the app state with the user data using reverpod
-          ref.read(userProvider.notifier).setUser(userJson);
+          ref.read(userProvider.notifier).setUser(response.body);
           // store the user data in shared preferences for future use
           await preferences.setString("user", userJson);
 
-          // show a snackbar with the message
-          showSnackBar(context, "logged in successfully");
-          // navigate to the main screen
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => MainScreen()),
-            (route) => false,
-          );
+          if (ref.read(userProvider)!.token.isNotEmpty) {
+            // navigate to the main screen
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => MainScreen()),
+              (route) => false,
+            );
+            // show a snackbar with the message
+            showSnackBar(context, "logged in successfully");
+          }
         },
       );
     } catch (e) {
@@ -113,7 +115,7 @@ class AuthController {
     }
   }
 
-  getUserData(context, WidgetRef ref) async{
+  getUserData(context, WidgetRef ref) async {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       String? token = preferences.getString('auth_token');
@@ -130,13 +132,13 @@ class AuthController {
       var response = jsonDecode(tokenResponse.body);
       if (response == true) {
         http.Response userResponse = await http.get(
-        Uri.parse('$uri/'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-auth-token': token,
-        },
-      );
-      ref.read(userProvider.notifier).setUser(userResponse.body);
+          Uri.parse('$uri/'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': token,
+          },
+        );
+        ref.read(userProvider.notifier).setUser(userResponse.body);
       } else {
         showSnackBar(context, "Your login has expired. Please log in again.");
       }
