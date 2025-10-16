@@ -113,6 +113,39 @@ class AuthController {
     }
   }
 
+  getUserData(context, WidgetRef ref) async{
+    try {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      String? token = preferences.getString('auth_token');
+      if (token == null) {
+        preferences.setString('auth_token', '');
+      }
+      var tokenResponse = await http.post(
+        Uri.parse('$uri/api/tokenIsValid'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token!,
+        },
+      );
+      var response = jsonDecode(tokenResponse.body);
+      if (response == true) {
+        http.Response userResponse = await http.get(
+        Uri.parse('$uri/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token,
+        },
+      );
+      ref.read(userProvider.notifier).setUser(userResponse.body);
+      } else {
+        showSnackBar(context, "Your login has expired. Please log in again.");
+      }
+    } catch (e) {
+      ///print('Error getting user data: $e');
+      showSnackBar(context, "Error getting user data: ${e.toString()}");
+    }
+  }
+
   // sign out user
   Future<void> signOutUser({
     required BuildContext context,
