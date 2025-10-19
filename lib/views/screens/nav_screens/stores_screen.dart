@@ -33,6 +33,7 @@ class _StoresScreenState extends ConsumerState<StoresScreen> {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final vendors = ref.watch(vendorProvider);
@@ -111,12 +112,13 @@ class _StoresScreenState extends ConsumerState<StoresScreen> {
           ),
         ),
       ),
-      body: isLoading
+      body:
+          isLoading
               ? const Center(child: CircularProgressIndicator())
               : Padding(
                 padding: const EdgeInsets.all(8.0),
                 child:
-                     vendors.isEmpty
+                    vendors.isEmpty
                         ? const Center(child: Text('No products found'))
                         : GridView.builder(
                           itemCount: vendors.length,
@@ -129,7 +131,32 @@ class _StoresScreenState extends ConsumerState<StoresScreen> {
                               ),
                           itemBuilder: (context, index) {
                             final vendor = vendors[index];
-                            return Text(vendor.fullName);
+                            return Column(
+                              children: [
+                                CircleAvatar(
+                                  radius: 50,
+                                  // check if vendor image is null
+                                  backgroundImage:
+                                      vendor.storeImage != null
+                                          ? NetworkImage(vendor.storeImage!)
+                                          : null,
+                                  child:  Text(
+                                    vendor.fullName[0].toUpperCase(),
+                                    style: GoogleFonts.lato(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  vendor.fullName,
+                                  style: GoogleFonts.lato(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            );
                           },
                         ),
               ),
