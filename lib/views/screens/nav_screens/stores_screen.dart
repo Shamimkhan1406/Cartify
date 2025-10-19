@@ -1,11 +1,50 @@
+import 'package:cartify/controllers/vendor_controller.dart';
+import 'package:cartify/provider/vendor_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class StoresScreen extends StatelessWidget {
+class StoresScreen extends ConsumerStatefulWidget {
   const StoresScreen({super.key});
 
   @override
+  ConsumerState<StoresScreen> createState() => _StoresScreenState();
+}
+
+class _StoresScreenState extends ConsumerState<StoresScreen> {
+  bool isLoading = true;
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //futureBanners = VendorController().loadBanners();
+    _fetchVendor();
+  }
+
+  Future<void> _fetchVendor() async {
+    final VendorController vendorController = VendorController();
+    try {
+      final vendors = await vendorController.loadVendors();
+      ref.read(vendorProvider.notifier).setVendors(vendors);
+    } catch (e) {
+      print('Error fetching vendors: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+  @override
   Widget build(BuildContext context) {
+    final vendors = ref.watch(vendorProvider);
+    final screenWidth = MediaQuery.of(context).size.width;
+    // set the crossAxisCount based on screen width
+    // if screen width is less than 600, set crossAxisCount to 2
+    // if screen width is greater than 600, set crossAxisCount to 4
+    final crossAxisCount = screenWidth < 600 ? 2 : 4;
+    // set the expect ration (screen to height ) of each grid based on the screen width
+    // for smaller screen, set the expect ratio to 3.4 taller items
+    // for larger screen, set the expect ratio to 4.5 square items
+    final childAspectRatio = screenWidth < 600 ? 3 / 4 : 4 / 5;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(
@@ -43,7 +82,7 @@ class StoresScreen extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            '0',
+                            vendors.length.toString(),
                             //cartData.length.toString(),
                             style: TextStyle(
                               fontSize: 12,
@@ -72,7 +111,28 @@ class StoresScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Center(child: Text("Stores Screen")),
+      body: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:
+                     vendors.isEmpty
+                        ? const Center(child: Text('No products found'))
+                        : GridView.builder(
+                          itemCount: vendors.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: crossAxisCount,
+                                childAspectRatio: childAspectRatio,
+                                mainAxisSpacing: 8,
+                                crossAxisSpacing: 8,
+                              ),
+                          itemBuilder: (context, index) {
+                            final vendor = vendors[index];
+                            return Text(vendor.fullName);
+                          },
+                        ),
+              ),
     );
   }
 }

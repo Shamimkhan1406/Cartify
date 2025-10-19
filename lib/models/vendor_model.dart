@@ -1,8 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class Vendor {
-  // defined the feilds that we need
   final String id;
   final String fullName;
   final String email;
@@ -10,10 +8,11 @@ class Vendor {
   final String city;
   final String locality;
   final String role;
-  final String password;
-  final String token;
+  final String? password;
+  final String? token;
   final String? storeImage;
   final String? storeDescription;
+  final String? storeName;
 
   Vendor({
     required this.id,
@@ -23,16 +22,15 @@ class Vendor {
     required this.city,
     required this.locality,
     required this.role,
-    required this.password,
-    required this.token,
+    this.password,
+    this.token,
     this.storeImage,
     this.storeDescription,
+    this.storeName,
   });
 
-  // converting to map so that we can easily convert to json because the data will be sent to mongoDB in json formate
-
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
       'id': id,
       'fullName': fullName,
       'email': email,
@@ -43,30 +41,27 @@ class Vendor {
       'password': password,
       'token': token,
       'storeImage': storeImage,
-      'storeDescription': storeDescription
+      'storeDescription': storeDescription,
+      'storeName': storeName,
     };
   }
-  // converting to json
 
   String toJson() => json.encode(toMap());
-  // converting back to dart object so that we can use in the app
 
-  factory Vendor.fromMap(Map<String, dynamic> map) {
+  factory Vendor.fromJson(Map<String, dynamic> map) {
     return Vendor(
-      id: map['_id'] as String? ?? '',
-      fullName: map['fullName'] as String? ?? '',
-      email: map['email'] as String? ?? '',
-      state: map['state'] as String? ?? '',
-      city: map['city'] as String? ?? '',
-      locality: map['locality'] as String? ?? '',
-      role: map['role'] as String? ?? '',
-      password: map['password'] as String? ?? '',
-      token: map['token'] as String? ?? '',
-      storeImage: map['storeImage'] as String? ?? '',
-      storeDescription: map['storeDescription'] as String? ?? '',
+      id: map['_id']?.toString() ?? '',
+      fullName: map['fullName']?.toString() ?? '',
+      email: map['email']?.toString() ?? '',
+      state: map['state']?.toString() ?? '',
+      city: map['city']?.toString() ?? '',
+      locality: map['locality']?.toString() ?? '',
+      role: map['role']?.toString() ?? '',
+      password: map['password']?.toString(),
+      token: map['token']?.toString(),
+      storeImage: map['storeImage']?.toString(),
+      storeDescription: map['storeDescription']?.toString(),
+      storeName: map['storeName']?.toString(),
     );
   }
-
-  factory Vendor.fromJson(String source) =>
-      Vendor.fromMap(json.decode(source) as Map<String, dynamic>);
 }
