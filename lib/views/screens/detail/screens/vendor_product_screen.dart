@@ -102,8 +102,7 @@ class _VendorProductScreenState extends ConsumerState<VendorProductScreen> {
                         ),
                         child: Center(
                           child: Text(
-                            '0',
-                            //cartData.length.toString(),
+                            products.length.toString(),
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -131,63 +130,63 @@ class _VendorProductScreenState extends ConsumerState<VendorProductScreen> {
           ),
         ),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                widget.vendor.storeImage!.isNotEmpty
-                    ? CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(widget.vendor.storeImage!),
-                    )
-                    : CircleAvatar(
-                      radius: 50,
-                      child: Text(
-                        widget.vendor.fullName[0].toUpperCase(),
-                        style: GoogleFonts.lato(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                        ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+      
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              widget.vendor.storeImage!.isNotEmpty
+                  ? CircleAvatar(
+                    radius: 50,
+                    backgroundImage: NetworkImage(widget.vendor.storeImage!),
+                  )
+                  : CircleAvatar(
+                    radius: 50,
+                    child: Text(
+                      widget.vendor.fullName[0].toUpperCase(),
+                      style: GoogleFonts.lato(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                widget.vendor.storeDescription!.isEmpty
-                    ? Text('')
-                    : Text(
-                      widget.vendor.storeDescription!,
-                      style: GoogleFonts.lato(fontSize: 16),
-                    ),
-                const SizedBox(height: 10),
-                Divider(thickness: 1, color: Colors.grey),
-                const SizedBox(height: 10),
-                isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child:
-                          products.isEmpty
-                              ? const Center(child: Text('No products found'))
-                              : GridView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: products.length,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: crossAxisCount,
-                                      childAspectRatio: childAspectRatio,
-                                      mainAxisSpacing: 8,
-                                      crossAxisSpacing: 8,
-                                    ),
-                                itemBuilder: (context, index) {
-                                  final product = products[index];
-                                  return ProductItemWidget(product: product);
-                                },
-                              ),
-                    ),
-              ],
-            ),
+                  ),
+              widget.vendor.storeDescription!.isEmpty
+                  ? Text('')
+                  : Text(
+                    widget.vendor.storeDescription!,
+                    style: GoogleFonts.lato(fontSize: 16),
+                  ),
+              const SizedBox(height: 10),
+              Divider(thickness: 1, color: Colors.grey),
+              const SizedBox(height: 10),
+              isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child:
+                        products.isEmpty
+                            ? const Center(child: Text('No products found'))
+                            : GridView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: products.length,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: crossAxisCount,
+                                    childAspectRatio: childAspectRatio,
+                                    mainAxisSpacing: 8,
+                                    crossAxisSpacing: 8,
+                                  ),
+                              itemBuilder: (context, index) {
+                                final product = products[index];
+                                return ProductItemWidget(product: product);
+                              },
+                            ),
+                  ),
+            ],
           ),
         ),
       ),
