@@ -114,7 +114,7 @@ class AuthController {
       showSnackBar(context, "Signin failed: ${e.toString()}");
     }
   }
-
+// get user data
   getUserData(context, WidgetRef ref) async {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
