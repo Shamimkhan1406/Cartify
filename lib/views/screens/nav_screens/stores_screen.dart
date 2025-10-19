@@ -1,5 +1,6 @@
 import 'package:cartify/controllers/vendor_controller.dart';
 import 'package:cartify/provider/vendor_provider.dart';
+import 'package:cartify/views/screens/detail/screens/vendor_product_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -131,31 +132,46 @@ class _StoresScreenState extends ConsumerState<StoresScreen> {
                               ),
                           itemBuilder: (context, index) {
                             final vendor = vendors[index];
-                            return Column(
-                              children: [
-                                CircleAvatar(
-                                  radius: 50,
+                            return InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return VendorProductScreen(
+                                        vendor: vendor,
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                              child: Column(
+                                children: [
                                   // check if vendor image is null
-                                  backgroundImage:
-                                      vendor.storeImage != null
-                                          ? NetworkImage(vendor.storeImage!)
-                                          : null,
-                                  child:  Text(
-                                    vendor.fullName[0].toUpperCase(),
+                                  vendor.storeImage!.isNotEmpty ? 
+                                  CircleAvatar(
+                                    radius: 50,
+                                    backgroundImage: NetworkImage(vendor.storeImage!),
+                                  ):
+                                  CircleAvatar(
+                                    radius: 50,
+                                    child: Text(
+                                      vendor.fullName[0].toUpperCase(),
+                                      style: GoogleFonts.lato(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    vendor.fullName,
                                     style: GoogleFonts.lato(
-                                      fontSize: 30,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ),
-                                Text(
-                                  vendor.fullName,
-                                  style: GoogleFonts.lato(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             );
                           },
                         ),
