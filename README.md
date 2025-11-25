@@ -1,16 +1,29 @@
-# cartify
+# Cartify — E-Commerce Mobile App
 
-A new Flutter project.
+A full-featured e-commerce application built using **Flutter**, offering a seamless shopping experience with product browsing, cart management, secure checkout, and order tracking.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🚀 Features
+- 🔐 User Authentication (JWT)
+- 🛒 Product Browsing & Search
+- 🛍 Shopping Cart & Checkout
+- 💳 Stripe Integration for Secure Payments
+- 📦 Order Tracking System
+- 📸 Cloudinary Image Loading
+- 🎨 Modern, Responsive UI
+- 🔄 Live sync with backend
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 🛠️ Tech Stack
+- Flutter & Dart  
+- Node.js + Express (REST API)  
+- MongoDB (Mongoose)  
+- Cloudinary  
+- Stripe  
+- MVC Architecture  
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## 📁 Project Structure
